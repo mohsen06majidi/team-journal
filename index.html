@@ -443,15 +443,27 @@ function errorView(msg){
 function loginView(){
   app.innerHTML = `<div class="center"><form class="card login reveal" id="lf" autocomplete="on">
     <h1>ژورنال تیم</h1><p>ورود فقط برای اعضای تیم.</p>
-    <input class="field ltr" id="em" type="email" inputmode="email" autocomplete="username" placeholder="ایمیل" required>
-    <input class="field ltr" id="pw" type="password" autocomplete="current-password" placeholder="رمز عبور" required>
+    <input class="field ltr" id="em" type="email" inputmode="email" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ایمیل" required>
+    <input class="field ltr" id="pw" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="رمز عبور" required>
     <div class="err" id="er" role="alert"></div>
     <button class="btn block" id="go" type="submit">ورود</button></form></div>`;
   $("#lf").onsubmit = async e => {
     e.preventDefault();
     const b = $("#go"); b.disabled = true; $("#er").textContent = "";
-    try { const u = await api.signIn($("#em").value.trim(), $("#pw").value); await enter(u); }
-    catch (err) { $("#er").textContent = "ایمیل یا رمز عبور درست نیست."; b.disabled = false; }
+    let u;
+    try { u = await api.signIn($("#em").value.trim(), $("#pw").value); }
+    catch (err) {
+      const m = (err && err.message) || "";
+      $("#er").innerHTML = /invalid login credentials/i.test(m)
+        ? "ایمیل یا رمز عبور درست نیست."
+        : `ورود انجام نشد. دلیل (برای پشتیبانی): <span class="ltr" style="display:block;direction:ltr;text-align:left">${esc(m || "unknown error")}</span>`;
+      b.disabled = false; return;
+    }
+    try { await enter(u); }
+    catch (err) {
+      console.error(err);
+      errorView("ورود انجام شد ولی خواندن اطلاعات تیم ممکن نشد: " + ((err && err.message) || "unknown error"));
+    }
   };
 }
 function noAccessView(){
