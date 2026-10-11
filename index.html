@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>ژورنال تیم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f5f5f7; --card:#ffffff; --field:#f2f2f4;
+  --text:#111113; --muted:#5c5c63; --faint:#9a9aa1;
+  --line:rgba(0,0,0,.1);
+  --accent:#0071e3; --accent-soft:rgba(0,113,227,.12);
+  --ok:#1f7a38; --danger:#d70015;
+  --radius:24px; --radius-sm:16px;
+  --shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.06);
+  --blur-bg:rgba(245,245,247,.75);
+  --c1:#0071e3; --c2:#a550d6; --c3:#1f7a38;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#000000; --card:#1c1c1e; --field:#2c2c2e;
+    --text:#f7f7f9; --muted:#a8a8b0; --faint:#6a6a72;
+    --line:rgba(255,255,255,.12);
+    --accent:#2997ff; --accent-soft:rgba(41,151,255,.18);
+    --ok:#32d74b; --danger:#ff453a;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+    --blur-bg:rgba(0,0,0,.75);
+    --c1:#2997ff; --c2:#bf5af2; --c3:#32d74b;
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"Vazirmatn",system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;
+  font-size:16px;font-weight:500;line-height:1.85;
+  padding-bottom:max(56px,env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;
+}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.app{max-width:640px;margin:0 auto;padding:0 16px}
+
+/* header */
+.topbar{
+  position:sticky;top:0;z-index:20;
+  margin:0 -16px;padding:max(10px,env(safe-area-inset-top)) 16px 10px;
+  background:var(--blur-bg);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  display:flex;align-items:center;justify-content:space-between;min-height:56px;
+}
+.topbar h1{margin:0;font-size:19px;font-weight:800}
+.avatar-btn{padding:0;border-radius:50%}
+.avatar{
+  width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  font-weight:800;font-size:15px;line-height:1;flex:none;
+  background:color-mix(in srgb,var(--mc) 16%,transparent);color:var(--mc);
+}
+.avatar.sm{width:28px;height:28px;font-size:13px}
+
+.banner{
+  background:var(--accent-soft);color:var(--accent);border-radius:var(--radius-sm);
+  padding:12px 16px;font-size:14px;font-weight:600;line-height:1.7;margin:8px 0 8px;
+}
+
+/* day sections */
+.day{margin-top:36px}
+.day:first-child{margin-top:16px}
+.day-head{display:flex;justify-content:space-between;align-items:flex-end;margin:0 6px 16px}
+.day-head .wk{color:var(--muted);font-size:15px;font-weight:700}
+.day-head .dt{font-size:38px;font-weight:900;line-height:1.35;letter-spacing:-.01em}
+.day-head .yr{color:var(--muted);font-size:14px;font-weight:600}
+.day-head .side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.badge{background:var(--accent);color:#fff;border-radius:999px;padding:2px 14px;font-size:13px;font-weight:700}
+.prog{color:var(--muted);font-size:13px;font-weight:600}
+
+/* cards */
+.card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:24px 20px;margin-bottom:16px;
+}
+.reveal{animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0)*70ms)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.reveal,.comment{animation:none}*{transition:none!important}}
+
+.q-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:18px}
+.q-num{
+  flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:16px;margin-top:2px;
+}
+.q-head h2{margin:0;font-size:21px;font-weight:800;line-height:1.7}
+.label{display:block;font-size:13px;color:var(--muted);font-weight:700;margin:0 4px 8px}
+textarea{
+  display:block;width:100%;min-height:170px;resize:none;overflow:hidden;
+  padding:16px 18px;border:0;border-radius:var(--radius-sm);
+  background:var(--field);font-size:17px;font-weight:500;line-height:2.05;
+  transition:box-shadow .2s ease;
+}
+textarea::placeholder,input::placeholder{color:var(--faint);font-weight:500}
+textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.save-row{min-height:26px;padding:6px 6px 0;font-size:13px;font-weight:600;color:var(--muted)}
+.save-state[data-s=saved]{color:var(--ok)}
+.save-state[data-s=error]{color:var(--danger)}
+
+.aview .who{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-weight:800;font-size:15px}
+.aview .body{white-space:pre-wrap;word-break:break-word;font-size:17px;font-weight:500;line-height:2.05}
+.aview.empty .body{color:var(--faint);font-size:15px}
+
+.comments{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}
+.comments h3{margin:0 4px 6px;font-size:13px;font-weight:700;color:var(--muted)}
+.comment{display:flex;gap:10px;padding:8px 0;animation:rise .4s both}
+.comment .bubble{background:var(--field);border-radius:18px;padding:8px 14px;flex:1;min-width:0}
+.comment .meta{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:600;color:var(--muted)}
+.comment .meta b{color:var(--text);font-weight:800;font-size:13px}
+.comment .txt{white-space:pre-wrap;word-break:break-word;font-size:16px;font-weight:500;line-height:1.85}
+.comment .del{margin-inline-start:auto;font-size:12px;font-weight:600;color:var(--muted);padding:2px 4px}
+.cform{display:flex;gap:8px;margin-top:8px}
+.field{
+  flex:1;min-width:0;border:0;background:var(--field);border-radius:999px;
+  padding:11px 18px;font-size:16px;font-weight:500;transition:box-shadow .2s;
+}
+.send{
+  flex:none;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;
+  display:grid;place-items:center;transition:transform .15s,opacity .2s;
+}
+.send:disabled{opacity:.35}
+.send svg{width:20px;height:20px}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--accent);color:#fff;border-radius:999px;padding:13px 24px;font-weight:800;
+  transition:transform .15s,opacity .2s;min-height:48px;
+}
+.btn.block{width:100%}
+.btn.ghost{background:var(--card);color:var(--text);box-shadow:var(--shadow)}
+.sheet .btn.ghost{background:var(--field);box-shadow:none}
+.btn.danger{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+.btn:active,.send:active{transform:scale(.97)}
+.btn:disabled{opacity:.5}
+.more{margin-top:28px}
+.end-note{color:var(--muted);text-align:center;padding:28px 0;font-weight:600}
+
+/* login */
+.center{min-height:100dvh;display:grid;place-items:center;padding:24px 0}
+.login{width:100%}
+.login h1{font-size:32px;margin:0 0 6px;font-weight:900}
+.login p{margin:0 0 24px;color:var(--muted);font-weight:600}
+.login .field{display:block;width:100%;border-radius:var(--radius-sm);margin-bottom:12px;padding:14px 18px}
+.ltr{direction:ltr;text-align:left}
+.err{color:var(--danger);font-size:14px;font-weight:600;min-height:24px;margin:4px 4px 8px}
+
+/* sheet */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .3s;z-index:40}
+.sheet{
+  position:fixed;inset-inline:0;bottom:0;z-index:50;max-width:640px;margin:0 auto;
+  background:var(--card);border-radius:28px 28px 0 0;padding:12px 20px max(24px,env(safe-area-inset-bottom));
+  transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.8,.2,1);
+  max-height:90dvh;overflow:auto;
+}
+.sheet.open{transform:none}.overlay.open{opacity:1}
+.grab{width:40px;height:5px;border-radius:99px;background:var(--faint);opacity:.5;margin:0 auto 16px}
+.sheet h3{margin:0 0 4px;font-size:21px;font-weight:800}
+.sheet .sub{color:var(--muted);font-size:14px;font-weight:600;margin-bottom:16px}
+.sheet .row{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.sheet .field{border-radius:var(--radius-sm);width:100%;flex:none;display:block}
+.pick{display:flex;align-items:center;gap:10px;padding:8px 12px 8px 16px;border-radius:999px;background:var(--field);font-weight:700}
+.pick small{color:var(--muted);font-weight:600}
+.pick.on{box-shadow:0 0 0 2px var(--accent)}
+
+.toast{
+  position:fixed;left:50%;bottom:max(28px,env(safe-area-inset-bottom));transform:translate(-50%,20px);
+  background:var(--text);color:var(--bg);padding:10px 20px;border-radius:999px;font-size:14px;font-weight:600;
+  opacity:0;pointer-events:none;transition:all .3s;z-index:60;white-space:nowrap
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.loading{display:grid;place-items:center;min-height:50dvh;color:var(--muted)}
+.dots span{display:inline-block;width:8px;height:8px;margin:0 3px;border-radius:50%;background:var(--faint);animation:pulse 1s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+<div class="app" id="app"><div class="loading"><div class="dots"><span></span><span></span><span></span></div></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ CONFIG ============
+  Leave both values empty to run the demo (sample data, saved only on this device).
+  After you set up Supabase (see SETUP.md), paste the Project URL and the anon/publishable key here.
+  NEVER paste the service_role / secret key anywhere in this file.
+-->
+<script>
+window.TEAM_JOURNAL_CONFIG = {
+  SUPABASE_URL: "https://ewqzwozomapwodipjnjf.supabase.co",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV3cXp3b3pvbWFwd29kaXBqbmpmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MjI1ODEsImV4cCI6MjEwNzI5ODU4MX0.7LseEzLF2waJ-L4eUGIV_JYC3aTuBdP7riU1xVhW7cQ"
+};
+</script>
+
+<script type="module">
+const CFG = window.TEAM_JOURNAL_CONFIG || {};
+const LIVE = Boolean(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+
+/* The three fixed questions. Their numbers (1..3) are what is stored in the database. */
+const QUESTIONS = [
+  "چه اقداماتی برای معرفی کاربران جدید انجام شد؟",
+  "چه افرادی بازاریابی شدند؟",
+  "چه اقداماتی جهت پشتیبانی از کاربران انجام شد؟"
+];
+const MAX_COMMENT = 500;
+const PAGE_DAYS = 7;
+const COLORS = ["var(--c1)","var(--c2)","var(--c3)"];
+const ROLE_FA = { author:"نویسنده", reviewer:"بازخورددهنده" };
+
+/* ---------- helpers ---------- */
+const $ = (s, r=document) => r.querySelector(s);
+const fa = n => new Intl.NumberFormat("fa-IR").format(n);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const pad = n => String(n).padStart(2,"0");
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parseISO = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d,12); };
+const todayISO = () => iso(new Date());
+const addDays = (s,n) => { const d = parseISO(s); d.setDate(d.getDate()+n); return iso(d); };
+const P = "fa-IR-u-ca-persian";
+const F = {
+  day: new Intl.DateTimeFormat(P,{day:"numeric"}),
+  month: new Intl.DateTimeFormat(P,{month:"long"}),
+  weekday: new Intl.DateTimeFormat(P,{weekday:"long"}),
+  year: new Intl.DateTimeFormat(P,{year:"numeric"}),
+  time: new Intl.DateTimeFormat("fa-IR",{hour:"2-digit",minute:"2-digit",hour12:false})
+};
+const dayMonth = s => `${F.day.format(parseISO(s))} ${F.month.format(parseISO(s))}`;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const svgSend = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
+
+let toastTimer;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
+}
+
+/* =====================================================================
+   DEMO API  (sample data kept only in this browser's localStorage)
+   ===================================================================== */
+const POOL = [
+ [ "یک ویدیوی دو دقیقه‌ای برای آشنایی کاربران جدید با امکانات اصلی ضبط کردم و آن را در صفحه‌ی اول قرار دادیم. پیام خوش‌آمدگویی خودکار را هم بازنویسی کردم تا لحن دوستانه‌تری داشته باشد و مسیر شروع را در سه قدم ساده نشان بدهد. فردا بررسی می‌کنم چند نفر ویدیو را تا آخر دیده‌اند.",
+   "راهنمای شروع سریع را به‌روز کردم و تصویرهای قدیمی را با تصویرهای نسخه‌ی جدید عوض کردم. سه کاربر تازه را به یک جلسه‌ی آنلاین کوتاه دعوت کردم تا اولین تجربه‌شان را با هم مرور کنیم. از آن جلسه دو پیشنهاد مهم برای ساده‌تر شدن ثبت‌نام گرفتم.",
+   "برای هر کاربر جدید یک ایمیل شخصی‌تر نوشتم که در آن نام او و کاری که قرار است انجام بدهد آمده است. نرخ بازشدن ایمیل‌ها نسبت به هفته‌ی قبل بهتر شد. همچنین صفحه‌ی سؤالات متداول را کوتاه‌تر کردم تا سریع‌تر خوانده شود.",
+   "یک چک‌لیست سه‌مرحله‌ای داخل خود برنامه اضافه شد که کاربر تازه را قدم‌به‌قدم تا اولین نتیجه همراهی می‌کند. با پنج کاربر جدید تماس کوتاه گرفتم و پرسیدم کجا گیج شده‌اند. بیشتر آن‌ها بخش تنظیمات را سخت پیدا می‌کردند.",
+   "متن صفحه‌ی خوش‌آمدگویی را با تیم طراحی بازبینی کردم و قرار شد عکس‌ها ساده‌تر شوند. یک مثال آماده هم داخل برنامه گذاشتیم تا کاربر جدید با داده‌ی نمونه شروع کند و صفحه‌ی خالی نبیند.",
+   "یک پست آموزشی بلند درباره‌ی چهار کار اول بعد از ثبت‌نام نوشتم و در کانال‌های خودمان منتشر کردم. از چند کاربر جدید خواستم نظرشان را بنویسند و دو نفر فوراً پاسخ دادند. پیشنهادها را در فهرست کارها یادداشت کردم.",
+   "فرایند ثبت‌نام را یک بار از ابتدا مثل یک کاربر کاملاً تازه امتحان کردم و هفت مورد کوچک و آزاردهنده پیدا کردم. چهار مورد را همین امروز اصلاح کردم و بقیه را برای فردا گذاشتم." ],
+ [ "با پنج نفر از مدیران استارتاپ‌های کوچک تماس گرفتم و نسخه‌ی آزمایشی را معرفی کردم. دو نفر از آن‌ها علاقه نشان دادند و قرار شد هفته‌ی آینده نمایش کامل ببینند. دو نفر دیگر خواستند فعلاً فقط ایمیل بفرستم.",
+   "یک گروه از فریلنسرهای طراح را هدف گرفتم، چون به نظرم بیشتر از بقیه به ابزار ما نیاز دارند. برای ده نفر از آن‌ها پیام شخصی نوشتم و سه نفر جواب دادند. یکی از آن‌ها قبول کرد نسخه‌ی آزمایشی را امتحان کند.",
+   "فهرست مشتریان قدیمی را مرور کردم و با هشت نفر از آن‌ها که مدتی بود فعالیتی نداشتند صحبت کردم. دلیل اصلی دوری‌شان این بود که ویژگی‌های جدید را نمی‌شناختند. برای همه یک خلاصه‌ی کوتاه از تغییرات فرستادم.",
+   "در دو گروه تخصصی که اعضایش مدیران محصول هستند، تجربه‌ی خودمان را به‌صورت یک پست آموزشی منتشر کردم، نه تبلیغ مستقیم. حدود بیست نفر پست را ذخیره کردند و چهار نفر پیام خصوصی دادند.",
+   "با دو شرکت کوچک که مشتری هدف ما هستند جلسه‌ی معرفی داشتم. یکی از آن‌ها همان‌جا چند سؤال دقیق درباره‌ی قیمت پرسید و جدی به نظر می‌رسید. پیشنهاد قیمت را فردا برایش می‌فرستم.",
+   "دانشجوها و تازه‌کارهای حوزه‌ی کاری خودمان را هدف گرفتم و برای سه انجمن دانشجویی پیام فرستادم. یک انجمن پذیرفت که ما را در خبرنامه‌ی ماه آینده‌شان معرفی کند.",
+   "از چند مشتری راضی خواستم دوستان خودشان را معرفی کنند و یک کد تخفیف ساده برایشان گذاشتم. سه نفر قبول کردند و تا شب دو معرفی جدید ثبت شد." ],
+ [ "به دوازده پیام پشتیبانی پاسخ دادم و میانگین زمان پاسخ‌گویی حدود یک ساعت شد. دو مشکل تکراری درباره‌ی ورود به حساب پیدا کردم و متن راهنمای جداگانه‌ای برای آن‌ها نوشتم تا دفعه‌ی بعد سریع‌تر جواب بدهیم.",
+   "برای کاربری که نمی‌توانست فایلش را بارگذاری کند، تا پایان مشکل کنارش ماندم. علت تنظیمات مرورگر او بود. همین ماجرا را در بخش سؤالات متداول ثبت کردم تا بقیه هم استفاده کنند.",
+   "فرم تماس را ساده کردم و یک دکمه‌ی گفت‌وگوی سریع اضافه شد. با سه کاربر ناراضی تماس تلفنی گرفتم، عذرخواهی کردم و راه‌حل را توضیح دادم. دو نفر از آن‌ها بعد از تماس رضایتشان را اعلام کردند.",
+   "فهرست مشکل‌های پرتکرار هفته را جمع‌بندی کردم و برای تیم فنی فرستادم. پنج مشکل اول بیش از شصت درصد پیام‌ها را تشکیل می‌دادند. قرار شد دو مورد از آن‌ها این هفته رفع شود.",
+   "پاسخ‌های آماده‌ی پشتیبانی را بازنویسی کردم تا خشک و رسمی نباشند ولی دقیق بمانند. همچنین یک ویدیوی کوتاه برای حل مشکل رایج پرداخت ضبط کردم و لینکش را در پاسخ‌ها قرار دادم.",
+   "امروز یک اعلان داخل برنامه گذاشتیم که از قطعی کوتاه فردا شب خبر می‌دهد تا کاربران غافلگیر نشوند. به چند کاربر مهم هم جداگانه پیام دادم و از آن‌ها برای صبرشان تشکر کردم.",
+   "به همه‌ی پیام‌های بی‌پاسخ هفته‌ی قبل سر زدم و چهار پیام فراموش‌شده را پیدا کردم. برای هر کدام عذرخواهی و پاسخ کامل فرستادم. یک یادآور هفتگی هم برای خودم گذاشتم تا دیگر چیزی جا نماند." ]
+];
+/* how many of the 3 questions the author answered, by days ago */
+const PLAN = {0:2,1:3,2:3,3:3,4:2,5:3,6:3,7:3,8:3,9:3};
+const SEED_COMMENTS = [
+  {off:0,q:1,j:1,t:"ویدیو عالیه. فقط اگر ممکنه زیرنویس هم داشته باشه.",h:11},
+  {off:0,q:2,j:2,t:"روی گروه فریلنسرها بیشتر کار کن، به نظرم بهترین فرصت همونه.",h:12},
+  {off:1,q:3,j:1,t:"آفرین، ثبت این مشکل‌ها در سؤالات متداول خیلی کمک می‌کنه.",h:17},
+  {off:1,q:1,j:2,t:"لطفاً نتیجه‌ی ویدیو رو فردا بنویس.",h:18},
+  {off:2,q:2,j:1,t:"کد تخفیف رو به همه نده، فقط به معرفی‌شده‌ها بده.",h:16}
+];
+
+function createDemoApi(){
+  const KEY = "team-journal-demo-v2";
+  const members = [
+    {id:"u1",name:"سارا",role:"author"},
+    {id:"u2",name:"امیر",role:"reviewer"},
+    {id:"u3",name:"نیلوفر",role:"reviewer"}
+  ];
+  const stamp = (date,h,m=0) => { const d = parseISO(date); d.setHours(h,m,0,0); return d.toISOString(); };
+  function seed(){
+    const t = todayISO(), answers = [], comments = [], dates = new Set([t]);
+    let cid = 1;
+    for (const [off,count] of Object.entries(PLAN)){
+      const date = addDays(t,-Number(off)); dates.add(date);
+      for (let q=1;q<=count;q++)
+        answers.push({date,q,user_id:"u1",body:POOL[q-1][(Number(off)+q*2)%7],updated_at:stamp(date,9+q)});
+    }
+    for (const c of SEED_COMMENTS){
+      const date = addDays(t,-c.off);
+      comments.push({id:"c"+(cid++),date,q:c.q,user_id:members[c.j].id,body:c.t,created_at:stamp(date,c.h,20)});
+    }
+    return {meId:"u1",answers,comments,dates:[...dates]};
+  }
+  let db = null;
+  try { db = JSON.parse(localStorage.getItem(KEY)); } catch {}
+  if (!db || !Array.isArray(db.answers)) db = seed();
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} };
+  save();
+  const me = () => members.find(m => m.id === db.meId);
+  return {
+    mode:"demo",
+    async getSession(){ return {id:me().id,email:"demo@local"}; },
+    async members(){ return members.map(m => ({...m})); },
+    switchUser(id){ db.meId = id; save(); },
+    async listDays(){ return db.dates.slice().sort().reverse().map(date => ({date})); },
+    async loadEntry(date){
+      return {
+        answers: db.answers.filter(a=>a.date===date).map(a=>({...a})),
+        comments: db.comments.filter(c=>c.date===date).map(c=>({...c}))
+          .sort((a,b)=>a.created_at.localeCompare(b.created_at))
+      };
+    },
+    async saveAnswer(date,q,body){
+      await sleep(250);
+      if (me().role !== "author") throw new Error("not author");
+      if (!db.dates.includes(date)) db.dates.push(date);
+      const i = db.answers.findIndex(a=>a.date===date&&a.q===q&&a.user_id===db.meId);
+      if (!body.trim()){ if (i>=0) db.answers.splice(i,1); }
+      else if (i>=0){ db.answers[i].body = body; db.answers[i].updated_at = new Date().toISOString(); }
+      else db.answers.push({date,q,user_id:db.meId,body,updated_at:new Date().toISOString()});
+      save();
+    },
+    async addComment(date,q,body){
+      await sleep(150);
+      const c = {id:"c"+Date.now(),date,q,user_id:db.meId,body,created_at:new Date().toISOString()};
+      db.comments.push(c); save(); return {...c};
+    },
+    async deleteComment(id){ db.comments = db.comments.filter(c=>c.id!==id); save(); },
+    async signOut(){}, async updatePassword(){}
+  };
+}
+
+/* =====================================================================
+   LIVE API  (Supabase: auth + Postgres with Row Level Security)
+   ===================================================================== */
+async function createLiveApi(){
+  const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+  const sb = createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
+  });
+  let teamId = null, uid = null;
+  const must = ({data,error}) => { if (error) throw error; return data; };
+
+  async function entryId(date, create){
+    let row = must(await sb.from("entries").select("id").eq("entry_date",date).maybeSingle());
+    if (!row && create){
+      must(await sb.from("entries").upsert({team_id:teamId,entry_date:date},{onConflict:"team_id,entry_date",ignoreDuplicates:true}));
+      row = must(await sb.from("entries").select("id").eq("entry_date",date).maybeSingle());
+    }
+    return row ? row.id : null;
+  }
+  return {
+    mode:"live",
+    async getSession(){
+      const { data } = await sb.auth.getSession();
+      const u = data.session?.user; if (!u) return null;
+      uid = u.id; return {id:u.id,email:u.email};
+    },
+    async signIn(email,password){
+      const { data, error } = await sb.auth.signInWithPassword({email,password});
+      if (error) throw error;
+      uid = data.user.id; return {id:data.user.id,email:data.user.email};
+    },
+    async signOut(){ await sb.auth.signOut(); },
+    async updatePassword(password){ const { error } = await sb.auth.updateUser({password}); if (error) throw error; },
+    async members(){
+      const rows = must(await sb.from("members").select("user_id,team_id,display_name,role").order("created_at"));
+      const mine = rows.find(r => r.user_id === uid);
+      if (mine) teamId = mine.team_id;
+      return rows.map(r => ({id:r.user_id,name:r.display_name,role:r.role}));
+    },
+    async listDays(){
+      const rows = must(await sb.from("entries").select("entry_date").order("entry_date",{ascending:false}).limit(120));
+      return rows.map(r => ({date:r.entry_date}));
+    },
+    async loadEntry(date){
+      const id = await entryId(date,false);
+      if (!id) return {answers:[],comments:[]};
+      const [a,c] = await Promise.all([
+        sb.from("answers").select("question_no,user_id,body,updated_at").eq("entry_id",id),
+        sb.from("comments").select("id,question_no,user_id,body,created_at").eq("entry_id",id).order("created_at")
+      ]);
+      return {
+        answers: must(a).map(r => ({date,q:r.question_no,user_id:r.user_id,body:r.body,updated_at:r.updated_at})),
+        comments: must(c).map(r => ({id:r.id,date,q:r.question_no,user_id:r.user_id,body:r.body,created_at:r.created_at}))
+      };
+    },
+    async saveAnswer(date,q,body){
+      const id = await entryId(date, date === todayISO());
+      if (!id) throw new Error("no entry");
+      if (!body.trim()){
+        must(await sb.from("answers").delete().eq("entry_id",id).eq("question_no",q).eq("user_id",uid));
+        return;
+      }
+      must(await sb.from("answers").upsert(
+        {team_id:teamId,entry_id:id,question_no:q,user_id:uid,body},
+        {onConflict:"entry_id,question_no,user_id"}));
+    },
+    async addComment(date,q,body){
+      const id = await entryId(date, false);
+      if (!id) throw new Error("no entry");
+      const r = must(await sb.from("comments").insert({team_id:teamId,entry_id:id,question_no:q,user_id:uid,body})
+        .select("id,created_at").single());
+      return {id:r.id,date,q,user_id:uid,body,created_at:r.created_at};
+    },
+    async deleteComment(id){ must(await sb.from("comments").delete().eq("id",id)); }
+  };
+}
+
+/* =====================================================================
+   APP
+   ===================================================================== */
+let api;
+const state = {user:null,members:[],me:null,author:null,isAuthor:false,days:[],next:0,data:{}};
+let flushers = [], pollTimer = null, renderedToday = todayISO();
+const app = $("#app");
+const memberOf = id => state.members.find(m => m.id === id);
+const colorOf = id => COLORS[Math.max(0,state.members.findIndex(m => m.id === id)) % 3];
+const avatar = (m,cls="") => `<span class="avatar ${cls}" style="--mc:${colorOf(m.id)}" aria-hidden="true">${esc([...m.name][0] || "؟")}</span>`;
+const answerOf = (date,q) => (state.data[date]?.answers || []).find(a => a.q===q && state.author && a.user_id===state.author.id && a.body.trim());
+const cardEl = (date,q) => $(`.q[data-date="${date}"][data-q="${q}"]`);
+
+function loadingView(){ app.innerHTML = `<div class="loading"><div class="dots"><span></span><span></span><span></span></div></div>`; }
+function errorView(msg){
+  app.innerHTML = `<div class="center"><div class="card login reveal">
+    <h1>مشکل در اتصال</h1><p>${esc(msg)}</p>
+    <button class="btn block" id="retry">تلاش دوباره</button></div></div>`;
+  $("#retry").onclick = () => location.reload();
+}
+
+/* ---- login ---- */
+function loginView(){
+  app.innerHTML = `<div class="center"><form class="card login reveal" id="lf" autocomplete="on">
+    <h1>ژورنال تیم</h1><p>ورود فقط برای اعضای تیم.</p>
+    <input class="field ltr" id="em" type="email" inputmode="email" autocomplete="username" placeholder="ایمیل" required>
+    <input class="field ltr" id="pw" type="password" autocomplete="current-password" placeholder="رمز عبور" required>
+    <div class="err" id="er" role="alert"></div>
+    <button class="btn block" id="go" type="submit">ورود</button></form></div>`;
+  $("#lf").onsubmit = async e => {
+    e.preventDefault();
+    const b = $("#go"); b.disabled = true; $("#er").textContent = "";
+    try { const u = await api.signIn($("#em").value.trim(), $("#pw").value); await enter(u); }
+    catch (err) { $("#er").textContent = "ایمیل یا رمز عبور درست نیست."; b.disabled = false; }
+  };
+}
+function noAccessView(){
+  app.innerHTML = `<div class="center"><div class="card login reveal">
+    <h1>دسترسی ندارید</h1><p>این حساب عضو تیم نیست. اگر فکر می‌کنید اشتباه است، از مدیر تیم بخواهید شما را اضافه کند.</p>
+    <button class="btn block ghost" id="so">خروج</button></div></div>`;
+  $("#so").onclick = signOut;
+}
+async function signOut(){ await api.signOut(); location.reload(); }
+
+async function enter(user){
+  loadingView();
+  state.user = user;
+  state.members = await api.members();
+  state.me = memberOf(user.id);
+  if (!state.me) return noAccessView();
+  state.author = state.members.find(m => m.role === "author") || null;
+  state.isAuthor = state.me.role === "author";
+  showHome();
+}
+
+/* ---- home: one section per day ---- */
+async function showHome(){
+  flushAll(); clearInterval(pollTimer); loadingView();
+  const today = todayISO(); renderedToday = today;
+  let list;
+  try { list = await api.listDays(); }
+  catch { return errorView("اطلاعات بارگذاری نشد. اتصال اینترنت را بررسی کنید."); }
+  state.days = [today, ...list.map(d => d.date).filter(d => d < today)];
+  state.next = 0; state.data = {};
+  const demoBar = api.mode === "demo"
+    ? `<div class="banner">نسخه‌ی نمایشی — داده‌ها نمونه‌اند و فقط روی همین دستگاه می‌مانند. هنوز به Supabase وصل نیست.</div>` : "";
+  app.innerHTML = `
+    <header class="topbar"><h1>ژورنال تیم</h1>
+      <button class="avatar-btn" id="menu" aria-label="تنظیمات">${avatar(state.me)}</button></header>
+    ${demoBar}
+    <div id="days"></div><div id="more" class="more"></div>`;
+  $("#menu").onclick = openSheet;
+  await appendDays(PAGE_DAYS);
+  pollTimer = setInterval(() => { if (!document.hidden) refreshRecent(); }, 30000);
+}
+
+async function appendDays(n){
+  const slice = state.days.slice(state.next, state.next + n);
+  try {
+    const res = await Promise.all(slice.map(d => api.loadEntry(d)));
+    slice.forEach((d,i) => state.data[d] = res[i]);
+  } catch { toast("بارگذاری نشد. دوباره تلاش کن."); renderMore(); return; }
+  state.next += slice.length;
+  const wrap = document.createElement("div");
+  wrap.innerHTML = slice.map(daySection).join("");
+  const box = $("#days");
+  while (wrap.firstChild) box.append(wrap.firstChild);
+  slice.forEach(bindDay);
+  renderMore();
+}
+function renderMore(){
+  const el = $("#more");
+  if (state.next < state.days.length){
+    el.innerHTML = `<button class="btn block ghost" id="moreBtn">نمایش روزهای قبل</button>`;
+    $("#moreBtn").onclick = async e => { e.target.disabled = true; await appendDays(PAGE_DAYS); };
+  } else {
+    el.innerHTML = state.days.length > 1 ? `<div class="end-note">همه‌ی روزها نمایش داده شد.</div>` : "";
+  }
+}
+
+function daySection(date){
+  const d = parseISO(date), isToday = date === todayISO();
+  return `<section class="day" data-date="${date}">
+    <div class="day-head reveal">
+      <div><div class="wk">${esc(F.weekday.format(d))}</div><div class="dt">${esc(dayMonth(date))}</div><div class="yr">${esc(F.year.format(d))}</div></div>
+      <div class="side">${isToday ? `<span class="badge">امروز</span>` : ""}<span class="prog"></span></div>
+    </div>
+    ${QUESTIONS.map((t,i) => questionCard(date,t,i)).join("")}
+  </section>`;
+}
+
+function questionCard(date,title,i){
+  const q = i+1;
+  const body = state.isAuthor
+    ? `<label class="label" for="ta-${date}-${q}">پاسخ تو</label>
+       <textarea id="ta-${date}-${q}" placeholder="اینجا بنویس…"></textarea>
+       <div class="save-row"><span class="save-state" data-s=""></span></div>`
+    : `<div class="aview"></div>`;
+  return `<section class="card q reveal" data-date="${date}" data-q="${q}" style="--i:${q}">
+    <div class="q-head"><span class="q-num">${fa(q)}</span><h2>${esc(title)}</h2></div>
+    ${body}
+    <div class="comments">
+      <h3 class="ch"></h3><div class="clist"></div>
+      <form class="cform" hidden><input class="field" maxlength="${MAX_COMMENT}" placeholder="فیدبک کوتاه بنویس…" enterkeyhint="send" autocomplete="off">
+      <button class="send" type="submit" aria-label="ارسال" disabled>${svgSend}</button></form>
+    </div></section>`;
+}
+
+function bindDay(date){
+  QUESTIONS.forEach((_,i) => {
+    const q = i+1, card = cardEl(date,q);
+    if (state.isAuthor){
+      const ta = $("textarea", card), mine = answerOf(date,q);
+      ta.value = mine ? mine.body : ""; autoGrow(ta);
+      bindTextarea(card, ta, q, date);
+    } else renderAnswerView(date,q);
+    renderComments(date,q); bindComments(card, q, date);
+  });
+  updateProg(date);
+}
+
+function updateProg(date){
+  const n = [1,2,3].filter(q => answerOf(date,q)).length;
+  const el = $(`.day[data-date="${date}"] .prog`);
+  if (el) el.textContent = `${fa(n)} از ${fa(3)} پاسخ`;
+}
+
+function renderAnswerView(date,q){
+  const box = $(".aview", cardEl(date,q)), a = answerOf(date,q), au = state.author;
+  box.className = "aview" + (a ? "" : " empty");
+  box.innerHTML = (a && au ? `<div class="who">${avatar(au,"sm")}<span>${esc(au.name)}</span></div>` : "") +
+    `<div class="body">${a ? esc(a.body) : "هنوز پاسخی ثبت نشده است."}</div>`;
+}
+
+function renderComments(date,q){
+  const card = cardEl(date,q);
+  const list = (state.data[date]?.comments || []).filter(c => c.q === q);
+  $(".ch", card).textContent = list.length ? `فیدبک‌ها (${fa(list.length)})` : "فیدبک‌ها";
+  $(".clist", card).innerHTML = list.map(c => {
+    const m = memberOf(c.user_id) || {id:c.user_id,name:"؟"};
+    return `<div class="comment">${avatar(m,"sm")}<div class="bubble">
+      <div class="meta"><b>${esc(m.name)}</b><span>${esc(F.time.format(new Date(c.created_at)))}</span>
+      ${c.user_id===state.me.id ? `<button class="del" data-id="${esc(c.id)}">حذف</button>` : ""}</div>
+      <div class="txt">${esc(c.body)}</div></div></div>`;
+  }).join("");
+  $(".cform", card).hidden = !answerOf(date,q);   // feedback only makes sense under an existing answer
+}
+
+function bindComments(card, q, date){
+  const form = $(".cform", card), input = $(".field", form), btn = $(".send", form);
+  input.addEventListener("input", () => { btn.disabled = !input.value.trim(); });
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const body = input.value.trim(); if (!body) return;
+    btn.disabled = true;
+    try {
+      const c = await api.addComment(date,q,body);
+      state.data[date].comments.push(c); input.value = ""; renderComments(date,q);
+    } catch { toast("ارسال نشد. دوباره تلاش کن."); btn.disabled = false; }
+  };
+  $(".clist", card).onclick = async e => {
+    const b = e.target.closest(".del"); if (!b) return;
+    try {
+      await api.deleteComment(b.dataset.id);
+      state.data[date].comments = state.data[date].comments.filter(c => String(c.id) !== b.dataset.id);
+      renderComments(date,q);
+    } catch { toast("حذف نشد."); }
+  };
+}
+
+function autoGrow(ta){ ta.style.height = "auto"; ta.style.height = Math.max(170, ta.scrollHeight) + "px"; }
+
+function bindTextarea(card, ta, q, date){
+  const st = $(".save-state", card);
+  let last = ta.value, timer = null, busy = false, again = false;
+  const setSt = (s,t) => { st.dataset.s = s; st.textContent = t; };
+  async function flush(){
+    clearTimeout(timer);
+    if (busy){ again = true; return; }
+    const v = ta.value; if (v === last) return;
+    busy = true; setSt("saving","در حال ذخیره…");
+    try {
+      await api.saveAnswer(date,q,v); last = v;
+      const d = state.data[date];
+      d.answers = d.answers.filter(a => !(a.q===q && a.user_id===state.me.id));
+      if (v.trim()) d.answers.push({date,q,user_id:state.me.id,body:v,updated_at:new Date().toISOString()});
+      renderComments(date,q); updateProg(date); setSt("saved","ذخیره شد");
+      setTimeout(() => { if (st.dataset.s === "saved") setSt("",""); }, 2000);
+    } catch { setSt("error","ذخیره نشد — اتصال را بررسی کن"); }
+    busy = false;
+    if (again){ again = false; flush(); }
+  }
+  ta.addEventListener("input", () => {
+    autoGrow(ta); setSt("", "…");
+    clearTimeout(timer); timer = setTimeout(flush, 1000);
+  });
+  ta.addEventListener("blur", flush);
+  flushers.push(flush);
+}
+function flushAll(){ flushers.forEach(f => f()); flushers = []; }
+
+/* refresh feedback (and, for reviewers, answers) of the two newest days */
+async function refreshRecent(){
+  if (!state.me) return;
+  for (const date of state.days.slice(0,2)){
+    if (!state.data[date]) continue;
+    try {
+      const fresh = await api.loadEntry(date);
+      const cur = state.data[date];
+      cur.comments = fresh.comments;
+      if (!state.isAuthor) cur.answers = fresh.answers;
+      QUESTIONS.forEach((_,i) => {
+        if (!state.isAuthor) renderAnswerView(date,i+1);
+        renderComments(date,i+1);
+      });
+      updateProg(date);
+    } catch {}
+  }
+}
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden){ flushAll(); return; }
+  if (!state.me) return;
+  if (todayISO() !== renderedToday) showHome(); else refreshRecent();
+});
+addEventListener("pagehide", flushAll);
+
+/* ---- settings sheet ---- */
+function openSheet(){
+  const ov = document.createElement("div"); ov.className = "overlay";
+  const sh = document.createElement("div"); sh.className = "sheet"; sh.setAttribute("role","dialog");
+  const live = api.mode === "live";
+  sh.innerHTML = `<div class="grab"></div>
+    <h3>${esc(state.me.name)}</h3>
+    <div class="sub">${esc(ROLE_FA[state.me.role] || "")}${live && state.user.email ? " · " + esc(state.user.email) : ""}</div>
+    ${live ? `
+      <div class="row"><input class="field ltr" id="np" type="password" autocomplete="new-password" placeholder="رمز جدید (حداقل ۸ نویسه)"></div>
+      <div class="row"><button class="btn block ghost" id="cp">تغییر رمز عبور</button></div>
+      <div class="row"><button class="btn block danger" id="so2">خروج از حساب</button></div>`
+    : `<div class="sub">حالت نمایشی: می‌توانی خودت را جای هر عضو بگذاری.</div>
+       <div class="row">${state.members.map(m => `<button class="pick ${m.id===state.me.id?"on":""}" data-u="${m.id}">${avatar(m,"sm")}<span>${esc(m.name)}</span><small>${esc(ROLE_FA[m.role])}</small></button>`).join("")}</div>`}
+    <div class="row"><button class="btn block ghost" id="cl">بستن</button></div>`;
+  document.body.append(ov, sh);
+  requestAnimationFrame(() => { ov.classList.add("open"); sh.classList.add("open"); });
+  const close = () => { ov.classList.remove("open"); sh.classList.remove("open"); setTimeout(() => { ov.remove(); sh.remove(); }, 400); };
+  ov.onclick = close; $("#cl", sh).onclick = close;
+  if (live){
+    $("#so2", sh).onclick = signOut;
+    $("#cp", sh).onclick = async () => {
+      const v = $("#np", sh).value;
+      if (v.length < 8) return toast("رمز باید حداقل ۸ نویسه باشد.");
+      try { await api.updatePassword(v); toast("رمز تغییر کرد."); close(); } catch { toast("رمز تغییر نکرد."); }
+    };
+  } else {
+    sh.querySelectorAll(".pick").forEach(b => b.onclick = () => {
+      flushAll(); api.switchUser(b.dataset.u); close();
+      setTimeout(() => {
+        state.me = memberOf(b.dataset.u); state.user = {id:b.dataset.u};
+        state.isAuthor = state.me.role === "author"; showHome();
+      }, 250);
+    });
+  }
+}
+
+/* ---- start ---- */
+(async function boot(){
+  try {
+    api = LIVE ? await createLiveApi() : createDemoApi();
+    const user = await api.getSession();
+    if (!user) return loginView();
+    await enter(user);
+  } catch (e) {
+    console.error(e);
+    errorView(LIVE ? "اتصال به Supabase برقرار نشد. آدرس و کلید را در فایل بررسی کنید." : "خطای غیرمنتظره.");
+  }
+})();
+</script>
+</body>
+</html>
