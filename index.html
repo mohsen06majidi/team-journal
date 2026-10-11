@@ -106,7 +106,25 @@ textarea{
 }
 textarea::placeholder,input::placeholder{color:var(--faint);font-weight:500}
 textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
-.save-row{min-height:26px;padding:6px 6px 0;font-size:13px;font-weight:600;color:var(--muted)}
+.submit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px 0;min-height:56px}
+.btn.sm{min-height:44px;padding:9px 24px;font-size:15px}
+.save-state{font-size:13px;font-weight:600;color:var(--muted)}
+.save-state[data-s=draft]{color:var(--muted)}
+.mitem{background:var(--field);border-radius:20px;padding:14px;margin-bottom:12px}
+.mitem .field{display:block;width:100%;flex:none;border-radius:14px;margin-bottom:10px;background:var(--card);font-weight:700}
+.mitem textarea{min-height:110px;background:var(--card);margin-bottom:0}
+.mitem .submit-row{padding-top:10px;min-height:0}
+.acts{display:flex;align-items:center;gap:6px}
+.btn{white-space:nowrap}
+.mitem .save-state{flex:1;min-width:0;line-height:1.6;font-size:12.5px}
+.mitem .submit{flex:none;padding-inline:20px}
+.link-del{font-size:13px;color:var(--danger);font-weight:700;padding:8px 10px}
+.add-btn{margin:4px 0 6px}
+.mview{padding:14px 0;border-top:1px solid var(--line)}
+.mview:first-child{border-top:0;padding-top:0}
+.mview .mn{font-weight:800;font-size:18px;line-height:1.7}
+.mview .md{white-space:pre-wrap;word-break:break-word;font-size:16px;font-weight:500;line-height:2;color:var(--text)}
+.ccount{font-size:12px;font-weight:600;color:var(--muted);padding:4px 14px 0;min-height:20px}
 .save-state[data-s=saved]{color:var(--ok)}
 .save-state[data-s=error]{color:var(--danger)}
 
@@ -206,13 +224,15 @@ window.TEAM_JOURNAL_CONFIG = {
 const CFG = window.TEAM_JOURNAL_CONFIG || {};
 const LIVE = Boolean(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
 
-/* The three fixed questions. Their numbers (1..3) are what is stored in the database. */
+/* The daily questions. Each has a permanent `id` (that is what the database stores), so you can
+   reorder, reword or remove questions later and old answers stay attached to the right question.
+   New question? Give it a NEW id (4, 5, ...). Never reuse an old id for a different question.
+   «بازاریابی» is a separate section (not a question), its feedback thread uses id 0. */
 const QUESTIONS = [
-  "چه اقداماتی برای معرفی کاربران جدید انجام شد؟",
-  "چه افرادی بازاریابی شدند؟",
-  "چه اقداماتی جهت پشتیبانی از کاربران انجام شد؟"
+  { id:1, title:"چه اقداماتی برای معرفی کاربران جدید انجام شد؟" },
+  { id:3, title:"چه اقداماتی جهت پشتیبانی از کاربران انجام شد؟" }
 ];
-const MAX_COMMENT = 500;
+const MAX_COMMENT = 280;   // short feedback only (the database allows up to 500)
 const PAGE_DAYS = 7;
 const COLORS = ["var(--c1)","var(--c2)","var(--c3)"];
 const ROLE_FA = { author:"نویسنده", reviewer:"بازخورددهنده" };
@@ -235,6 +255,11 @@ const F = {
   time: new Intl.DateTimeFormat("fa-IR",{hour:"2-digit",minute:"2-digit",hour12:false})
 };
 const dayMonth = s => `${F.day.format(parseISO(s))} ${F.month.format(parseISO(s))}`;
+const normQs = raw => {          // the question list saved with a day (old format: plain strings)
+  if (!Array.isArray(raw) || !raw.length) return null;
+  const out = raw.map((x,i) => typeof x === "string" ? {id:i+1,title:x} : {id:Number(x && x.id),title:String((x && x.title) || "")});
+  return out.every(o => Number.isInteger(o.id) && o.id >= 1 && o.title) ? out : null;
+};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const svgSend = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
 
@@ -255,13 +280,7 @@ const POOL = [
    "متن صفحه‌ی خوش‌آمدگویی را با تیم طراحی بازبینی کردم و قرار شد عکس‌ها ساده‌تر شوند. یک مثال آماده هم داخل برنامه گذاشتیم تا کاربر جدید با داده‌ی نمونه شروع کند و صفحه‌ی خالی نبیند.",
    "یک پست آموزشی بلند درباره‌ی چهار کار اول بعد از ثبت‌نام نوشتم و در کانال‌های خودمان منتشر کردم. از چند کاربر جدید خواستم نظرشان را بنویسند و دو نفر فوراً پاسخ دادند. پیشنهادها را در فهرست کارها یادداشت کردم.",
    "فرایند ثبت‌نام را یک بار از ابتدا مثل یک کاربر کاملاً تازه امتحان کردم و هفت مورد کوچک و آزاردهنده پیدا کردم. چهار مورد را همین امروز اصلاح کردم و بقیه را برای فردا گذاشتم." ],
- [ "با پنج نفر از مدیران استارتاپ‌های کوچک تماس گرفتم و نسخه‌ی آزمایشی را معرفی کردم. دو نفر از آن‌ها علاقه نشان دادند و قرار شد هفته‌ی آینده نمایش کامل ببینند. دو نفر دیگر خواستند فعلاً فقط ایمیل بفرستم.",
-   "یک گروه از فریلنسرهای طراح را هدف گرفتم، چون به نظرم بیشتر از بقیه به ابزار ما نیاز دارند. برای ده نفر از آن‌ها پیام شخصی نوشتم و سه نفر جواب دادند. یکی از آن‌ها قبول کرد نسخه‌ی آزمایشی را امتحان کند.",
-   "فهرست مشتریان قدیمی را مرور کردم و با هشت نفر از آن‌ها که مدتی بود فعالیتی نداشتند صحبت کردم. دلیل اصلی دوری‌شان این بود که ویژگی‌های جدید را نمی‌شناختند. برای همه یک خلاصه‌ی کوتاه از تغییرات فرستادم.",
-   "در دو گروه تخصصی که اعضایش مدیران محصول هستند، تجربه‌ی خودمان را به‌صورت یک پست آموزشی منتشر کردم، نه تبلیغ مستقیم. حدود بیست نفر پست را ذخیره کردند و چهار نفر پیام خصوصی دادند.",
-   "با دو شرکت کوچک که مشتری هدف ما هستند جلسه‌ی معرفی داشتم. یکی از آن‌ها همان‌جا چند سؤال دقیق درباره‌ی قیمت پرسید و جدی به نظر می‌رسید. پیشنهاد قیمت را فردا برایش می‌فرستم.",
-   "دانشجوها و تازه‌کارهای حوزه‌ی کاری خودمان را هدف گرفتم و برای سه انجمن دانشجویی پیام فرستادم. یک انجمن پذیرفت که ما را در خبرنامه‌ی ماه آینده‌شان معرفی کند.",
-   "از چند مشتری راضی خواستم دوستان خودشان را معرفی کنند و یک کد تخفیف ساده برایشان گذاشتم. سه نفر قبول کردند و تا شب دو معرفی جدید ثبت شد." ],
+ [],
  [ "به دوازده پیام پشتیبانی پاسخ دادم و میانگین زمان پاسخ‌گویی حدود یک ساعت شد. دو مشکل تکراری درباره‌ی ورود به حساب پیدا کردم و متن راهنمای جداگانه‌ای برای آن‌ها نوشتم تا دفعه‌ی بعد سریع‌تر جواب بدهیم.",
    "برای کاربری که نمی‌توانست فایلش را بارگذاری کند، تا پایان مشکل کنارش ماندم. علت تنظیمات مرورگر او بود. همین ماجرا را در بخش سؤالات متداول ثبت کردم تا بقیه هم استفاده کنند.",
    "فرم تماس را ساده کردم و یک دکمه‌ی گفت‌وگوی سریع اضافه شد. با سه کاربر ناراضی تماس تلفنی گرفتم، عذرخواهی کردم و راه‌حل را توضیح دادم. دو نفر از آن‌ها بعد از تماس رضایتشان را اعلام کردند.",
@@ -270,18 +289,26 @@ const POOL = [
    "امروز یک اعلان داخل برنامه گذاشتیم که از قطعی کوتاه فردا شب خبر می‌دهد تا کاربران غافلگیر نشوند. به چند کاربر مهم هم جداگانه پیام دادم و از آن‌ها برای صبرشان تشکر کردم.",
    "به همه‌ی پیام‌های بی‌پاسخ هفته‌ی قبل سر زدم و چهار پیام فراموش‌شده را پیدا کردم. برای هر کدام عذرخواهی و پاسخ کامل فرستادم. یک یادآور هفتگی هم برای خودم گذاشتم تا دیگر چیزی جا نماند." ]
 ];
-/* how many of the 3 questions the author answered, by days ago */
-const PLAN = {0:2,1:3,2:3,3:3,4:2,5:3,6:3,7:3,8:3,9:3};
+/* how many of the 2 questions the author answered, by days ago */
+const PLAN = {0:1,1:2,2:2,3:2,4:1,5:2,6:2,7:2,8:2,9:2};
+const MK_SEED = [
+ [["دکتر احمدی","در مطب ملاقات کردیم و نسخه‌ی آزمایشی را معرفی کردم. علاقه نشان داد و قرار شد هفته‌ی بعد نمایش کامل ببیند."],
+  ["دکتر کریمی","تلفنی صحبت کردیم. فعلاً مشغول بود و خواست ایمیل بفرستم."]],
+ [["دکتر موسوی","جلسه‌ی ده‌دقیقه‌ای داشتیم. سؤال دقیقی درباره‌ی قیمت پرسید و جدی به نظر می‌رسید."]],
+ [["دکتر رضایی","از طریق یکی از مشتریان قدیمی معرفی شد. پیام اول را فرستادم و منتظر جواب هستم."],
+  ["دکتر نجفی","در همایش با او آشنا شدم و کارت دادم. قرار شد این هفته تماس بگیرم."],
+  ["دکتر حسینی","نسخه‌ی آزمایشی را شروع کرد و بعد از دو روز بازخورد مثبت داد."]]
+];
 const SEED_COMMENTS = [
   {off:0,q:1,j:1,t:"ویدیو عالیه. فقط اگر ممکنه زیرنویس هم داشته باشه.",h:11},
-  {off:0,q:2,j:2,t:"روی گروه فریلنسرها بیشتر کار کن، به نظرم بهترین فرصت همونه.",h:12},
+  {off:0,q:0,j:2,t:"روی گروه فریلنسرها بیشتر کار کن، به نظرم بهترین فرصت همونه.",h:12},
   {off:1,q:3,j:1,t:"آفرین، ثبت این مشکل‌ها در سؤالات متداول خیلی کمک می‌کنه.",h:17},
   {off:1,q:1,j:2,t:"لطفاً نتیجه‌ی ویدیو رو فردا بنویس.",h:18},
-  {off:2,q:2,j:1,t:"کد تخفیف رو به همه نده، فقط به معرفی‌شده‌ها بده.",h:16}
+  {off:2,q:0,j:1,t:"کد تخفیف رو به همه نده، فقط به معرفی‌شده‌ها بده.",h:16}
 ];
 
 function createDemoApi(){
-  const KEY = "team-journal-demo-v2";
+  const KEY = "team-journal-demo-v3";
   const members = [
     {id:"u1",name:"سارا",role:"author"},
     {id:"u2",name:"امیر",role:"reviewer"},
@@ -289,18 +316,20 @@ function createDemoApi(){
   ];
   const stamp = (date,h,m=0) => { const d = parseISO(date); d.setHours(h,m,0,0); return d.toISOString(); };
   function seed(){
-    const t = todayISO(), answers = [], comments = [], dates = new Set([t]);
-    let cid = 1;
+    const t = todayISO(), answers = [], comments = [], marketing = [], dates = new Set([t]);
+    let cid = 1, mid = 1;
     for (const [off,count] of Object.entries(PLAN)){
       const date = addDays(t,-Number(off)); dates.add(date);
-      for (let q=1;q<=count;q++)
-        answers.push({date,q,user_id:"u1",body:POOL[q-1][(Number(off)+q*2)%7],updated_at:stamp(date,9+q)});
+      [1,3].slice(0,count).forEach(q =>
+        answers.push({date,q,user_id:"u1",body:POOL[q-1][(Number(off)+q*2)%7],updated_at:stamp(date,9+q)}));
+      if (count > 0) MK_SEED[Number(off) % MK_SEED.length].forEach((m,k) =>
+        marketing.push({id:"m"+(mid++),date,user_id:"u1",name:m[0],notes:m[1],created_at:stamp(date,12+k)}));
     }
     for (const c of SEED_COMMENTS){
       const date = addDays(t,-c.off);
       comments.push({id:"c"+(cid++),date,q:c.q,user_id:members[c.j].id,body:c.t,created_at:stamp(date,c.h,20)});
     }
-    return {meId:"u1",answers,comments,dates:[...dates]};
+    return {meId:"u1",answers,comments,marketing,dates:[...dates]};
   }
   let db = null;
   try { db = JSON.parse(localStorage.getItem(KEY)); } catch {}
@@ -318,9 +347,25 @@ function createDemoApi(){
       return {
         answers: db.answers.filter(a=>a.date===date).map(a=>({...a})),
         comments: db.comments.filter(c=>c.date===date).map(c=>({...c}))
-          .sort((a,b)=>a.created_at.localeCompare(b.created_at))
+          .sort((a,b)=>a.created_at.localeCompare(b.created_at)),
+        marketing: (db.marketing || []).filter(m=>m.date===date).map(m=>({...m}))
+          .sort((a,b)=>a.created_at.localeCompare(b.created_at)),
+        questions: normQs((db.questions || {})[date])
       };
     },
+    async saveMarketing(date,item){
+      await sleep(200);
+      if (me().role !== "author") throw new Error("not author");
+      db.marketing = db.marketing || [];
+      if (!db.dates.includes(date)) db.dates.push(date);
+      if (item.id){
+        const m = db.marketing.find(x => x.id === item.id); if (!m) throw new Error("gone");
+        m.name = item.name; m.notes = item.notes; save(); return {...m};
+      }
+      const m = {id:"m"+Date.now()+Math.random().toString(36).slice(2,6),date,user_id:db.meId,name:item.name,notes:item.notes,created_at:new Date().toISOString()};
+      db.marketing.push(m); save(); return {...m};
+    },
+    async deleteMarketing(id){ db.marketing = (db.marketing || []).filter(m => m.id !== id); save(); },
     async saveAnswer(date,q,body){
       await sleep(250);
       if (me().role !== "author") throw new Error("not author");
@@ -352,13 +397,14 @@ async function createLiveApi(){
   let teamId = null, uid = null;
   const must = ({data,error}) => { if (error) throw error; return data; };
 
-  async function entryId(date, create){
-    let row = must(await sb.from("entries").select("id").eq("entry_date",date).maybeSingle());
+  // One row per day. `questions` is a snapshot of the 3 question texts used that day.
+  async function entryRow(date, create){
+    let row = must(await sb.from("entries").select("id,questions").eq("entry_date",date).maybeSingle());
     if (!row && create){
-      must(await sb.from("entries").upsert({team_id:teamId,entry_date:date},{onConflict:"team_id,entry_date",ignoreDuplicates:true}));
-      row = must(await sb.from("entries").select("id").eq("entry_date",date).maybeSingle());
+      must(await sb.from("entries").upsert({team_id:teamId,entry_date:date,questions:QUESTIONS},{onConflict:"team_id,entry_date",ignoreDuplicates:true}));
+      row = must(await sb.from("entries").select("id,questions").eq("entry_date",date).maybeSingle());
     }
-    return row ? row.id : null;
+    return row;
   }
   return {
     mode:"live",
@@ -385,20 +431,25 @@ async function createLiveApi(){
       return rows.map(r => ({date:r.entry_date}));
     },
     async loadEntry(date){
-      const id = await entryId(date,false);
-      if (!id) return {answers:[],comments:[]};
-      const [a,c] = await Promise.all([
+      const row = await entryRow(date,false);
+      if (!row) return {answers:[],comments:[],marketing:[],questions:null};
+      const id = row.id;
+      const [a,c,mk] = await Promise.all([
         sb.from("answers").select("question_no,user_id,body,updated_at").eq("entry_id",id),
-        sb.from("comments").select("id,question_no,user_id,body,created_at").eq("entry_id",id).order("created_at")
+        sb.from("comments").select("id,question_no,user_id,body,created_at").eq("entry_id",id).order("created_at"),
+        sb.from("marketing_items").select("id,user_id,doctor_name,notes,created_at").eq("entry_id",id).order("created_at")
       ]);
       return {
         answers: must(a).map(r => ({date,q:r.question_no,user_id:r.user_id,body:r.body,updated_at:r.updated_at})),
-        comments: must(c).map(r => ({id:r.id,date,q:r.question_no,user_id:r.user_id,body:r.body,created_at:r.created_at}))
+        comments: must(c).map(r => ({id:r.id,date,q:r.question_no,user_id:r.user_id,body:r.body,created_at:r.created_at})),
+        marketing: must(mk).map(r => ({id:r.id,date,user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at})),
+        questions: normQs(row.questions)
       };
     },
     async saveAnswer(date,q,body){
-      const id = await entryId(date, date === todayISO());
-      if (!id) throw new Error("no entry");
+      const row = await entryRow(date, date === todayISO());
+      if (!row) throw new Error("no entry");
+      const id = row.id;
       if (!body.trim()){
         must(await sb.from("answers").delete().eq("entry_id",id).eq("question_no",q).eq("user_id",uid));
         return;
@@ -408,13 +459,24 @@ async function createLiveApi(){
         {onConflict:"entry_id,question_no,user_id"}));
     },
     async addComment(date,q,body){
-      const id = await entryId(date, false);
-      if (!id) throw new Error("no entry");
+      const row = await entryRow(date, false);
+      if (!row) throw new Error("no entry");
+      const id = row.id;
       const r = must(await sb.from("comments").insert({team_id:teamId,entry_id:id,question_no:q,user_id:uid,body})
         .select("id,created_at").single());
       return {id:r.id,date,q,user_id:uid,body,created_at:r.created_at};
     },
-    async deleteComment(id){ must(await sb.from("comments").delete().eq("id",id)); }
+    async deleteComment(id){ must(await sb.from("comments").delete().eq("id",id)); },
+    async saveMarketing(date,item){
+      const row = await entryRow(date, date === todayISO());
+      if (!row) throw new Error("no entry");
+      const cols = "id,user_id,doctor_name,notes,created_at";
+      const r = item.id
+        ? must(await sb.from("marketing_items").update({doctor_name:item.name,notes:item.notes}).eq("id",item.id).select(cols).single())
+        : must(await sb.from("marketing_items").insert({team_id:teamId,entry_id:row.id,user_id:uid,doctor_name:item.name,notes:item.notes}).select(cols).single());
+      return {id:r.id,date,user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at};
+    },
+    async deleteMarketing(id){ must(await sb.from("marketing_items").delete().eq("id",id)); }
   };
 }
 
@@ -422,12 +484,13 @@ async function createLiveApi(){
    APP
    ===================================================================== */
 let api;
-const state = {user:null,members:[],me:null,author:null,isAuthor:false,days:[],next:0,data:{}};
+const state = {user:null,members:[],me:null,author:null,isAuthor:false,days:[],next:0,data:{},newItems:{}};
 let flushers = [], pollTimer = null, renderedToday = todayISO();
 const app = $("#app");
 const memberOf = id => state.members.find(m => m.id === id);
 const colorOf = id => COLORS[Math.max(0,state.members.findIndex(m => m.id === id)) % 3];
 const avatar = (m,cls="") => `<span class="avatar ${cls}" style="--mc:${colorOf(m.id)}" aria-hidden="true">${esc([...m.name][0] || "؟")}</span>`;
+const qsFor = date => (state.data[date] && state.data[date].questions) || QUESTIONS;
 const answerOf = (date,q) => (state.data[date]?.answers || []).find(a => a.q===q && state.author && a.user_id===state.author.id && a.body.trim());
 const cardEl = (date,q) => $(`.q[data-date="${date}"][data-q="${q}"]`);
 
@@ -493,7 +556,7 @@ async function showHome(){
   try { list = await api.listDays(); }
   catch { return errorView("اطلاعات بارگذاری نشد. اتصال اینترنت را بررسی کنید."); }
   state.days = [today, ...list.map(d => d.date).filter(d => d < today)];
-  state.next = 0; state.data = {};
+  state.next = 0; state.data = {}; state.newItems = {};
   const demoBar = api.mode === "demo"
     ? `<div class="banner">نسخه‌ی نمایشی — داده‌ها نمونه‌اند و فقط روی همین دستگاه می‌مانند. هنوز به Supabase وصل نیست.</div>` : "";
   app.innerHTML = `
@@ -537,44 +600,145 @@ function daySection(date){
       <div><div class="wk">${esc(F.weekday.format(d))}</div><div class="dt">${esc(dayMonth(date))}</div><div class="yr">${esc(F.year.format(d))}</div></div>
       <div class="side">${isToday ? `<span class="badge">امروز</span>` : ""}<span class="prog"></span></div>
     </div>
-    ${QUESTIONS.map((t,i) => questionCard(date,t,i)).join("")}
+    ${qsFor(date).map((qo,i) => questionCard(date,qo,i)).join("")}
+    ${marketingCard(date)}
   </section>`;
 }
 
-function questionCard(date,title,i){
-  const q = i+1;
-  const body = state.isAuthor
-    ? `<label class="label" for="ta-${date}-${q}">پاسخ تو</label>
-       <textarea id="ta-${date}-${q}" placeholder="اینجا بنویس…"></textarea>
-       <div class="save-row"><span class="save-state" data-s=""></span></div>`
-    : `<div class="aview"></div>`;
-  return `<section class="card q reveal" data-date="${date}" data-q="${q}" style="--i:${q}">
-    <div class="q-head"><span class="q-num">${fa(q)}</span><h2>${esc(title)}</h2></div>
-    ${body}
-    <div class="comments">
+const commentsBlock = () => `<div class="comments">
       <h3 class="ch"></h3><div class="clist"></div>
       <form class="cform" hidden><input class="field" maxlength="${MAX_COMMENT}" placeholder="فیدبک کوتاه بنویس…" enterkeyhint="send" autocomplete="off">
       <button class="send" type="submit" aria-label="ارسال" disabled>${svgSend}</button></form>
-    </div></section>`;
+      <div class="ccount"></div>
+    </div>`;
+
+function questionCard(date,qo,i){
+  const q = qo.id;
+  const body = state.isAuthor
+    ? `<label class="label" for="ta-${date}-${q}">پاسخ تو</label>
+       <textarea id="ta-${date}-${q}" placeholder="اینجا بنویس…"></textarea>
+       <div class="submit-row"><span class="save-state" data-s=""></span>
+         <button class="btn sm submit" type="button" disabled>ثبت جواب</button></div>`
+    : `<div class="aview"></div>`;
+  return `<section class="card q reveal" data-date="${date}" data-q="${q}" style="--i:${i+1}">
+    <div class="q-head"><span class="q-num">${fa(i+1)}</span><h2>${esc(qo.title)}</h2></div>
+    ${body}
+    ${commentsBlock()}
+  </section>`;
 }
 
+/* «بازاریابی»: a separate section where the author adds as many people as needed. Feedback thread id = 0. */
+function marketingCard(date){
+  return `<section class="card q mk reveal" data-date="${date}" data-q="0" style="--i:4">
+    <div class="q-head"><span class="q-num">★</span><h2>بازاریابی</h2></div>
+    <div class="mlist"></div>
+    ${state.isAuthor ? `<button class="btn ghost block add-btn" type="button">＋ افزودن نفر</button>` : ""}
+    ${commentsBlock()}
+  </section>`;
+}
+
+const hasContent = (date,q) => q === 0 ? ((state.data[date].marketing || []).length > 0) : !!answerOf(date,q);
+
 function bindDay(date){
-  QUESTIONS.forEach((_,i) => {
-    const q = i+1, card = cardEl(date,q);
-    if (state.isAuthor){
-      const ta = $("textarea", card), mine = answerOf(date,q);
-      ta.value = mine ? mine.body : ""; autoGrow(ta);
-      bindTextarea(card, ta, q, date);
-    } else renderAnswerView(date,q);
+  qsFor(date).forEach(qo => {
+    const q = qo.id, card = cardEl(date,q);
+    if (state.isAuthor) bindAuthorCard(card, q, date); else renderAnswerView(date,q);
     renderComments(date,q); bindComments(card, q, date);
   });
+  bindMarketing(date);
   updateProg(date);
 }
 
 function updateProg(date){
-  const n = [1,2,3].filter(q => answerOf(date,q)).length;
+  const qs = qsFor(date), n = qs.filter(qo => answerOf(date,qo.id)).length;
+  const mk = (state.data[date].marketing || []).length;
   const el = $(`.day[data-date="${date}"] .prog`);
-  if (el) el.textContent = `${fa(n)} از ${fa(3)} پاسخ`;
+  if (el) el.textContent = `${fa(n)} از ${fa(qs.length)} پاسخ` + (mk ? ` · ${fa(mk)} بازاریابی` : "");
+}
+
+/* ---- marketing section ---- */
+const mNewKey = date => `tj-mnew:${state.me.id}:${date}`;
+function saveNewDrafts(date){
+  const arr = state.newItems[date] || [];
+  lsSet(mNewKey(date), arr.length ? JSON.stringify(arr) : null);
+}
+function bindMarketing(date){
+  const card = cardEl(date,0);
+  let drafts = [];
+  if (state.isAuthor){ try { drafts = JSON.parse(lsGet(mNewKey(date)) || "[]"); } catch {} }
+  state.newItems[date] = Array.isArray(drafts) ? drafts : [];
+  renderMarketing(date);
+  renderComments(date,0); bindComments(card, 0, date);
+  if (state.isAuthor){
+    $(".add-btn", card).onclick = () => {
+      const tmp = "n" + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
+      const el = itemEl(date, {tmp,name:"",notes:""});
+      $(".mlist", card).append(el); el._grow(); $(".mname", el).focus();
+    };
+  }
+}
+function renderMarketing(date){
+  const list = $(".mlist", cardEl(date,0)), items = state.data[date].marketing || [];
+  if (!state.isAuthor){
+    list.innerHTML = items.length
+      ? items.map(m => `<div class="mview"><div class="mn">${esc(m.name)}</div>${m.notes ? `<div class="md">${esc(m.notes)}</div>` : ""}</div>`).join("")
+      : `<div class="aview empty"><div class="body">هنوز موردی ثبت نشده است.</div></div>`;
+    return;
+  }
+  list.innerHTML = "";
+  items.forEach(m => { const e = itemEl(date,{id:m.id,name:m.name,notes:m.notes}); list.append(e); e._grow(); });
+  (state.newItems[date] || []).forEach(n => { const e = itemEl(date,{tmp:n.tmp,name:n.name,notes:n.notes}); list.append(e); e._grow(); });
+}
+function itemEl(date, item){
+  const el = document.createElement("div"); el.className = "mitem";
+  el.innerHTML = `<input class="field mname" maxlength="200" placeholder="نام پزشک" autocomplete="off">
+    <textarea class="mnotes" placeholder="توضیحات"></textarea>
+    <div class="submit-row"><span class="save-state" data-s=""></span>
+      <span class="acts"><button class="link-del" type="button">حذف</button>
+      <button class="btn sm submit" type="button" disabled>ثبت</button></span></div>`;
+  const nm = $(".mname", el), nt = $(".mnotes", el), st = $(".save-state", el), btn = $(".submit", el), del = $(".link-del", el);
+  const cur = {id:item.id || null, tmp:item.tmp || null};
+  nm.value = item.name || ""; nt.value = item.notes || "";
+  el._grow = () => autoGrow(nt,110);
+  const setSt = (s,t) => { st.dataset.s = s; st.textContent = t; };
+  const saved = () => cur.id ? (state.data[date].marketing || []).find(m => m.id === cur.id) : null;
+  function refresh(){
+    const sv = saved(), has = nm.value.trim().length > 0;
+    if (!sv){ btn.textContent = "ثبت"; btn.disabled = !has; setSt("draft", has ? "ثبت نشده — هنوز کسی نمی‌بیند" : "نام پزشک را بنویس"); }
+    else if (nm.value === sv.name && nt.value === sv.notes){ btn.textContent = "ثبت شده ✓"; btn.disabled = true; setSt("saved","ثبت شد — دیگران می‌بینند"); }
+    else { btn.textContent = "ثبت تغییرات"; btn.disabled = !has; setSt("draft", has ? "تغییرات هنوز ثبت نشده" : "نام پزشک را بنویس"); }
+  }
+  function persistNew(){
+    if (cur.id) return;
+    const arr = state.newItems[date] || (state.newItems[date] = []);
+    let n = arr.find(x => x.tmp === cur.tmp); if (!n){ n = {tmp:cur.tmp}; arr.push(n); }
+    n.name = nm.value; n.notes = nt.value; saveNewDrafts(date);
+  }
+  const dropNew = () => { state.newItems[date] = (state.newItems[date] || []).filter(x => x.tmp !== cur.tmp); saveNewDrafts(date); };
+  [nm,nt].forEach(x => x.addEventListener("input", () => { if (x === nt) autoGrow(nt,110); persistNew(); refresh(); }));
+  btn.onclick = async () => {
+    btn.disabled = true; btn.textContent = "در حال ثبت…";
+    try {
+      const m = await api.saveMarketing(date, {id:cur.id, name:nm.value.trim(), notes:nt.value.trim()});
+      const d = state.data[date]; d.marketing = d.marketing || [];
+      const i = d.marketing.findIndex(x => x.id === m.id);
+      if (i >= 0) d.marketing[i] = m; else d.marketing.push(m);
+      if (!cur.id){ dropNew(); cur.id = m.id; }
+      nm.value = m.name; nt.value = m.notes; autoGrow(nt,110);
+      renderComments(date,0); updateProg(date); refresh(); toast("ثبت شد");
+    } catch { toast("ثبت نشد. اتصال را بررسی کن."); refresh(); }
+  };
+  del.onclick = async () => {
+    if (cur.id){
+      if (!confirm("این مورد برای همیشه حذف شود؟")) return;
+      try { await api.deleteMarketing(cur.id); } catch { return toast("حذف نشد."); }
+      const d = state.data[date]; d.marketing = (d.marketing || []).filter(x => x.id !== cur.id);
+      renderComments(date,0); updateProg(date);
+    } else dropNew();
+    el.remove();
+  };
+  refresh();
+  return el;
 }
 
 function renderAnswerView(date,q){
@@ -595,19 +759,23 @@ function renderComments(date,q){
       ${c.user_id===state.me.id ? `<button class="del" data-id="${esc(c.id)}">حذف</button>` : ""}</div>
       <div class="txt">${esc(c.body)}</div></div></div>`;
   }).join("");
-  $(".cform", card).hidden = !answerOf(date,q);   // feedback only makes sense under an existing answer
+  $(".cform", card).hidden = !hasContent(date,q);   // feedback only makes sense under existing content
 }
 
 function bindComments(card, q, date){
   const form = $(".cform", card), input = $(".field", form), btn = $(".send", form);
-  input.addEventListener("input", () => { btn.disabled = !input.value.trim(); });
+  const cc = $(".ccount", card);
+  input.addEventListener("input", () => {
+    btn.disabled = !input.value.trim();
+    cc.textContent = input.value.length ? `${fa(input.value.length)} / ${fa(MAX_COMMENT)}` : "";
+  });
   form.onsubmit = async e => {
     e.preventDefault();
     const body = input.value.trim(); if (!body) return;
     btn.disabled = true;
     try {
       const c = await api.addComment(date,q,body);
-      state.data[date].comments.push(c); input.value = ""; renderComments(date,q);
+      state.data[date].comments.push(c); input.value = ""; cc.textContent = ""; renderComments(date,q);
     } catch { toast("ارسال نشد. دوباره تلاش کن."); btn.disabled = false; }
   };
   $(".clist", card).onclick = async e => {
@@ -620,36 +788,58 @@ function bindComments(card, q, date){
   };
 }
 
-function autoGrow(ta){ ta.style.height = "auto"; ta.style.height = Math.max(170, ta.scrollHeight) + "px"; }
+function autoGrow(ta, min = 170){ ta.style.height = "auto"; ta.style.height = Math.max(min, ta.scrollHeight) + "px"; }
 
-function bindTextarea(card, ta, q, date){
-  const st = $(".save-state", card);
-  let last = ta.value, timer = null, busy = false, again = false;
+/* Drafts live only in this phone's browser until the author presses «ثبت جواب». */
+const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k,v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k,v); } catch {} };
+
+function bindAuthorCard(card, q, date){
+  const ta = $("textarea", card), st = $(".save-state", card), btn = $(".submit", card);
+  const key = `tj-draft:${state.me.id}:${date}:${q}`;
   const setSt = (s,t) => { st.dataset.s = s; st.textContent = t; };
-  async function flush(){
-    clearTimeout(timer);
-    if (busy){ again = true; return; }
-    const v = ta.value; if (v === last) return;
-    busy = true; setSt("saving","در حال ذخیره…");
+  const submitted = () => { const a = answerOf(date,q); return a ? a.body : null; };
+  function refresh(){
+    const sub = submitted(), v = ta.value, has = v.trim().length > 0;
+    if (sub === null){
+      btn.textContent = "ثبت جواب"; btn.disabled = !has;
+      setSt("draft", has ? "ثبت نشده — هنوز کسی نمی‌بیند" : "");
+    } else if (v === sub){
+      btn.textContent = "ثبت شده ✓"; btn.disabled = true;
+      setSt("saved","ثبت شد — دیگران می‌بینند");
+    } else if (!has){
+      btn.textContent = "حذف پاسخ"; btn.disabled = false;
+      setSt("draft","با زدن دکمه، پاسخ ثبت‌شده حذف می‌شود");
+    } else {
+      btn.textContent = "ثبت تغییرات"; btn.disabled = false;
+      setSt("draft","تغییرات هنوز ثبت نشده");
+    }
+  }
+  const sub0 = submitted(), draft0 = lsGet(key);
+  ta.value = draft0 !== null ? draft0 : (sub0 !== null ? sub0 : "");
+  autoGrow(ta); refresh();
+  ta.addEventListener("input", () => {
+    autoGrow(ta);
+    const sub = submitted();
+    lsSet(key, ta.value === (sub === null ? "" : sub) ? null : ta.value);
+    refresh();
+  });
+  btn.onclick = async () => {
+    const v = ta.value;
+    btn.disabled = true; btn.textContent = "در حال ثبت…";
     try {
-      await api.saveAnswer(date,q,v); last = v;
+      await api.saveAnswer(date,q,v);
       const d = state.data[date];
       d.answers = d.answers.filter(a => !(a.q===q && a.user_id===state.me.id));
       if (v.trim()) d.answers.push({date,q,user_id:state.me.id,body:v,updated_at:new Date().toISOString()});
-      renderComments(date,q); updateProg(date); setSt("saved","ذخیره شد");
-      setTimeout(() => { if (st.dataset.s === "saved") setSt("",""); }, 2000);
-    } catch { setSt("error","ذخیره نشد — اتصال را بررسی کن"); }
-    busy = false;
-    if (again){ again = false; flush(); }
-  }
-  ta.addEventListener("input", () => {
-    autoGrow(ta); setSt("", "…");
-    clearTimeout(timer); timer = setTimeout(flush, 1000);
-  });
-  ta.addEventListener("blur", flush);
-  flushers.push(flush);
+      else ta.value = "";
+      lsSet(key,null);
+      renderComments(date,q); updateProg(date); autoGrow(ta); refresh();
+      toast(v.trim() ? "جواب ثبت شد" : "جواب حذف شد");
+    } catch { toast("ثبت نشد. اتصال را بررسی کن."); refresh(); }
+  };
 }
-function flushAll(){ flushers.forEach(f => f()); flushers = []; }
+function flushAll(){}
 
 /* refresh feedback (and, for reviewers, answers) of the two newest days */
 async function refreshRecent(){
@@ -660,11 +850,13 @@ async function refreshRecent(){
       const fresh = await api.loadEntry(date);
       const cur = state.data[date];
       cur.comments = fresh.comments;
-      if (!state.isAuthor) cur.answers = fresh.answers;
-      QUESTIONS.forEach((_,i) => {
-        if (!state.isAuthor) renderAnswerView(date,i+1);
-        renderComments(date,i+1);
+      if (!state.isAuthor){ cur.answers = fresh.answers; cur.marketing = fresh.marketing; }
+      qsFor(date).forEach(qo => {
+        if (!state.isAuthor) renderAnswerView(date,qo.id);
+        renderComments(date,qo.id);
       });
+      if (!state.isAuthor) renderMarketing(date);
+      renderComments(date,0);
       updateProg(date);
     } catch {}
   }
