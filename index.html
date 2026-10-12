@@ -65,22 +65,30 @@ button{cursor:pointer;border:0;background:none}
   background:color-mix(in srgb,var(--mc) 16%,transparent);color:var(--mc);
 }
 .avatar.sm{width:28px;height:28px;font-size:13px}
-
 .banner{
   background:var(--accent-soft);color:var(--accent);border-radius:var(--radius-sm);
   padding:12px 16px;font-size:14px;font-weight:600;line-height:1.7;margin:8px 0 8px;
 }
 
-/* day sections */
-.day{margin-top:36px}
-.day:first-child{margin-top:16px}
-.day-head{display:flex;justify-content:space-between;align-items:flex-end;margin:0 6px 16px}
-.day-head .wk{color:var(--muted);font-size:15px;font-weight:700}
-.day-head .dt{font-size:38px;font-weight:900;line-height:1.35;letter-spacing:-.01em}
-.day-head .yr{color:var(--muted);font-size:14px;font-weight:600}
-.day-head .side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-.badge{background:var(--accent);color:#fff;border-radius:999px;padding:2px 14px;font-size:13px;font-weight:700}
-.prog{color:var(--muted);font-size:13px;font-weight:600}
+/* the one-day header: date + prev / calendar / next */
+.dayhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:14px 4px 14px}
+.dayhead .info{min-width:0}
+.dayhead .wk{color:var(--muted);font-size:15px;font-weight:700}
+.dayhead .dt{font-size:38px;font-weight:900;line-height:1.3;letter-spacing:-.01em}
+.dayhead .yr{color:var(--muted);font-size:14px;font-weight:600}
+.dayhead .tools{display:flex;gap:8px;flex:none}
+.iconbtn{
+  width:44px;height:44px;border-radius:50%;display:grid;place-items:center;
+  background:var(--card);box-shadow:var(--shadow);color:var(--text);transition:transform .15s,opacity .2s;
+}
+.iconbtn.accent{background:var(--accent);color:#fff}
+.iconbtn:disabled{opacity:.3}
+.iconbtn:active{transform:scale(.94)}
+.iconbtn svg{width:20px;height:20px}
+.sum{display:flex;flex-wrap:wrap;gap:6px 8px;margin:0 4px 16px;min-height:26px}
+.pill{background:var(--card);border-radius:999px;padding:1px 12px;font-size:13px;font-weight:700;color:var(--muted);box-shadow:var(--shadow)}
+.pill.today{background:var(--accent);color:#fff}
+.pill.ok{color:var(--ok)}
 
 /* cards */
 .card{
@@ -107,30 +115,50 @@ textarea{
 textarea::placeholder,input::placeholder{color:var(--faint);font-weight:500}
 textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 .submit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px 0;min-height:56px}
-.btn.sm{min-height:44px;padding:9px 24px;font-size:15px}
 .save-state{font-size:13px;font-weight:600;color:var(--muted)}
-.save-state[data-s=draft]{color:var(--muted)}
-.mitem{background:var(--field);border-radius:20px;padding:14px;margin-bottom:12px}
-.mitem .field{display:block;width:100%;flex:none;border-radius:14px;margin-bottom:10px;background:var(--card);font-weight:700}
-.mitem textarea{min-height:110px;background:var(--card);margin-bottom:0}
-.mitem .submit-row{padding-top:10px;min-height:0}
-.acts{display:flex;align-items:center;gap:6px}
-.btn{white-space:nowrap}
-.mitem .save-state{flex:1;min-width:0;line-height:1.6;font-size:12.5px}
-.mitem .submit{flex:none;padding-inline:20px}
-.link-del{font-size:13px;color:var(--danger);font-weight:700;padding:8px 10px}
-.add-btn{margin:4px 0 6px}
-.mview{padding:14px 0;border-top:1px solid var(--line)}
-.mview:first-child{border-top:0;padding-top:0}
-.mview .mn{font-weight:800;font-size:18px;line-height:1.7}
-.mview .md{white-space:pre-wrap;word-break:break-word;font-size:16px;font-weight:500;line-height:2;color:var(--text)}
-.ccount{font-size:12px;font-weight:600;color:var(--muted);padding:4px 14px 0;min-height:20px}
 .save-state[data-s=saved]{color:var(--ok)}
 .save-state[data-s=error]{color:var(--danger)}
+.ccount{font-size:12px;font-weight:600;color:var(--muted);padding:4px 14px 0;min-height:20px}
 
 .aview .who{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-weight:800;font-size:15px}
 .aview .body{white-space:pre-wrap;word-break:break-word;font-size:17px;font-weight:500;line-height:2.05}
 .aview.empty .body{color:var(--faint);font-size:15px}
+
+/* compact list sections (marketing, support) */
+.sec{padding:14px 16px 12px;border-radius:22px;margin-bottom:12px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:2px}
+.sec-head h2{margin:0;font-size:18px;font-weight:800;line-height:1.6}
+.sec-count{color:var(--muted);font-size:13px;font-weight:700;flex:1}
+.add{
+  width:38px;height:38px;border-radius:50%;display:grid;place-items:center;flex:none;
+  background:var(--accent-soft);color:var(--accent);transition:transform .15s;
+}
+.add svg{width:20px;height:20px}
+.add:active{transform:scale(.9)}
+.row-item{display:flex;gap:8px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)}
+.row-item:first-child{border-top:0}
+.row-item .main{flex:1;min-width:0}
+.row-item .nm{font-weight:800;font-size:16px;line-height:1.65}
+.row-item .nt{color:var(--muted);font-size:14.5px;font-weight:500;line-height:1.8;white-space:pre-wrap;word-break:break-word}
+.row-item .acts{display:flex;gap:0;flex:none;margin-top:-2px}
+.tinybtn{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--faint)}
+.tinybtn svg{width:17px;height:17px}
+.tinybtn:active{background:var(--field)}
+.tinybtn.danger:active{color:var(--danger)}
+.sec-empty{color:var(--faint);font-size:14px;font-weight:600;padding:4px 0 6px}
+.form{background:var(--field);border-radius:16px;padding:10px;margin:6px 0}
+.form .field{display:block;width:100%;flex:none;border-radius:12px;background:var(--card);padding:9px 14px;font-size:15px;font-weight:700;margin-bottom:8px}
+.form textarea{min-height:76px;padding:10px 14px;font-size:15px;line-height:1.9;border-radius:12px;background:var(--card)}
+.form .bar{display:flex;justify-content:flex-end;gap:8px;margin-top:8px}
+.sec .comments{margin-top:6px;padding-top:8px}
+.sec .comments h3{font-size:12.5px;margin-bottom:2px}
+.sec .comment{padding:4px 0}
+.sec .comment .bubble{padding:5px 12px}
+.sec .comment .txt{font-size:14.5px;line-height:1.75}
+.sec .cform{margin-top:6px}
+.sec .cform .field{padding:8px 16px;font-size:15px}
+.sec .send{width:38px;height:38px}
+.sec .ccount{padding-top:2px;min-height:16px}
 
 .comments{border-top:1px solid var(--line);padding-top:14px;margin-top:16px}
 .comments h3{margin:0 4px 6px;font-size:13px;font-weight:700;color:var(--muted)}
@@ -152,29 +180,32 @@ textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 .send:disabled{opacity:.35}
 .send svg{width:20px;height:20px}
 .btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;
   background:var(--accent);color:#fff;border-radius:999px;padding:13px 24px;font-weight:800;
   transition:transform .15s,opacity .2s;min-height:48px;
 }
+.btn.sm{min-height:44px;padding:9px 24px;font-size:15px}
+.btn.xs{min-height:36px;padding:5px 18px;font-size:14px}
 .btn.block{width:100%}
 .btn.ghost{background:var(--card);color:var(--text);box-shadow:var(--shadow)}
-.sheet .btn.ghost{background:var(--field);box-shadow:none}
+.sheet .btn.ghost,.form .btn.ghost{background:var(--field);box-shadow:none}
+.form .btn.ghost{background:var(--card)}
 .btn.danger{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
 .btn:active,.send:active{transform:scale(.97)}
 .btn:disabled{opacity:.5}
-.more{margin-top:28px}
-.end-note{color:var(--muted);text-align:center;padding:28px 0;font-weight:600}
+.today-link{margin-top:6px}
 
 /* login */
 .center{min-height:100dvh;display:grid;place-items:center;padding:24px 0}
 .login{width:100%}
 .login h1{font-size:32px;margin:0 0 6px;font-weight:900}
 .login p{margin:0 0 24px;color:var(--muted);font-weight:600}
+.login .hint{margin:14px 4px 0;font-size:12.5px;color:var(--faint)}
 .login .field{display:block;width:100%;border-radius:var(--radius-sm);margin-bottom:12px;padding:14px 18px}
 .ltr{direction:ltr;text-align:left}
 .err{color:var(--danger);font-size:14px;font-weight:600;min-height:24px;margin:4px 4px 8px}
 
-/* sheet */
+/* sheets (settings, calendar) */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:opacity .3s;z-index:40}
 .sheet{
   position:fixed;inset-inline:0;bottom:0;z-index:50;max-width:640px;margin:0 auto;
@@ -191,6 +222,23 @@ textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 .pick{display:flex;align-items:center;gap:10px;padding:8px 12px 8px 16px;border-radius:999px;background:var(--field);font-weight:700}
 .pick small{color:var(--muted);font-weight:600}
 .pick.on{box-shadow:0 0 0 2px var(--accent)}
+
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin:0 0 10px}
+.cal-title{font-size:20px;font-weight:800}
+.sheet .iconbtn{background:var(--field);box-shadow:none}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px 2px}
+.cal-wd{text-align:center;color:var(--muted);font-size:13px;font-weight:700;padding:4px 0}
+.cal-day{
+  position:relative;display:grid;place-items:center;width:100%;max-width:46px;height:44px;margin:0 auto;
+  border-radius:22px;font-size:16px;font-weight:700;color:var(--text);
+}
+.cal-day.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.cal-day.sel{background:var(--accent);color:#fff}
+.cal-day:disabled{color:var(--faint);opacity:.45}
+.cal-day .dot{position:absolute;bottom:4px;left:50%;margin-left:-2.5px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
+.cal-day.sel .dot{background:#fff}
+.cal-foot{display:flex;gap:10px;margin-top:14px}
+.cal-foot .btn{flex:1}
 
 .toast{
   position:fixed;left:50%;bottom:max(28px,env(safe-area-inset-bottom));transform:translate(-50%,20px);
@@ -224,44 +272,65 @@ window.TEAM_JOURNAL_CONFIG = {
 const CFG = window.TEAM_JOURNAL_CONFIG || {};
 const LIVE = Boolean(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
 
-/* The daily questions. Each has a permanent `id` (that is what the database stores), so you can
-   reorder, reword or remove questions later and old answers stay attached to the right question.
-   New question? Give it a NEW id (4, 5, ...). Never reuse an old id for a different question.
-   «بازاریابی» is a separate section (not a question), its feedback thread uses id 0. */
+/* ---------------------------------------------------------------------
+   What is asked every day.
+   • QUESTIONS: written answers. Each has a permanent `id` (that is what the database stores),
+     so you can reword / remove questions later and old days keep their old answers.
+     New question? Give it a NEW id (4, 5, ...). Never reuse an old id for something else.
+   • SECTIONS: addable lists (name + notes). `kind` is stored in the database;
+     `thread` is the number used for the short feedback under that section (never reuse).
+   --------------------------------------------------------------------- */
 const QUESTIONS = [
-  { id:1, title:"چه اقداماتی برای معرفی کاربران جدید انجام شد؟" },
-  { id:3, title:"چه اقداماتی جهت پشتیبانی از کاربران انجام شد؟" }
+  { id:1, title:"چه اقداماتی برای معرفی کاربران جدید انجام شد؟" }
 ];
-const MAX_COMMENT = 280;   // short feedback only (the database allows up to 500)
-const PAGE_DAYS = 7;
+/* titles of questions that used to exist, so old answers are still shown with the right title */
+const LEGACY_TITLES = {
+  2:"چه افرادی بازاریابی شدند؟",
+  3:"چه اقداماتی جهت پشتیبانی از کاربران انجام شد؟"
+};
+const SECTIONS = [
+  { kind:"marketing", thread:0,   title:"بازاریابی", namePh:"نام پزشک",  notesPh:"توضیحات" },
+  { kind:"support",   thread:100, title:"پشتیبانی",  namePh:"نام کاربر", notesPh:"توضیحات" }
+];
+const MAX_COMMENT = 280;            // short feedback only (the database allows up to 500)
+const IDLE_MS = 30 * 60 * 1000;     // sign out after 30 minutes without activity
 const COLORS = ["var(--c1)","var(--c2)","var(--c3)"];
 const ROLE_FA = { author:"نویسنده", reviewer:"بازخورددهنده" };
 
 /* ---------- helpers ---------- */
 const $ = (s, r=document) => r.querySelector(s);
 const fa = n => new Intl.NumberFormat("fa-IR").format(n);
+const fy = n => new Intl.NumberFormat("fa-IR",{useGrouping:false}).format(n);   // years, no separators
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const pad = n => String(n).padStart(2,"0");
 const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const parseISO = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y,m-1,d,12); };
 const todayISO = () => iso(new Date());
 const addDays = (s,n) => { const d = parseISO(s); d.setDate(d.getDate()+n); return iso(d); };
+const validISO = s => /^\d{4}-\d{2}-\d{2}$/.test(s) && iso(parseISO(s)) === s;
 const P = "fa-IR-u-ca-persian";
 const F = {
-  day: new Intl.DateTimeFormat(P,{day:"numeric"}),
   month: new Intl.DateTimeFormat(P,{month:"long"}),
+  day: new Intl.DateTimeFormat(P,{day:"numeric"}),
   weekday: new Intl.DateTimeFormat(P,{weekday:"long"}),
   year: new Intl.DateTimeFormat(P,{year:"numeric"}),
   time: new Intl.DateTimeFormat("fa-IR",{hour:"2-digit",minute:"2-digit",hour12:false})
 };
 const dayMonth = s => `${F.day.format(parseISO(s))} ${F.month.format(parseISO(s))}`;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const ico = (d, extra="") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" ${extra}>${d}</svg>`;
+const svgSend  = ico(`<path d="M12 19V5M5 12l7-7 7 7"/>`);
+const svgPlus  = ico(`<path d="M12 5v14M5 12h14"/>`);
+const svgPrev  = ico(`<path d="M9 6l6 6-6 6"/>`);        // points right: "previous" in right-to-left
+const svgNext  = ico(`<path d="M15 6l-6 6 6 6"/>`);      // points left:  "next"
+const svgCal   = ico(`<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>`);
+const svgEdit  = ico(`<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>`);
+const svgTrash = ico(`<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/>`);
 const normQs = raw => {          // the question list saved with a day (old format: plain strings)
   if (!Array.isArray(raw) || !raw.length) return null;
   const out = raw.map((x,i) => typeof x === "string" ? {id:i+1,title:x} : {id:Number(x && x.id),title:String((x && x.title) || "")});
   return out.every(o => Number.isInteger(o.id) && o.id >= 1 && o.title) ? out : null;
 };
-const sleep = ms => new Promise(r => setTimeout(r, ms));
-const svgSend = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
 
 let toastTimer;
 function toast(msg){
@@ -269,46 +338,73 @@ function toast(msg){
   clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
 }
 
+/*JAL-START*/
+/* Persian (Jalali) calendar maths, done with the browser's own calendar so it is always right. */
+const PNUM = new Intl.DateTimeFormat("fa-IR-u-ca-persian-nu-latn",{year:"numeric",month:"numeric",day:"numeric"});
+function jparts(d){
+  const o = {};
+  for (const p of PNUM.formatToParts(d)) if (p.type === "year" || p.type === "month" || p.type === "day") o[p.type] = parseInt(p.value,10);
+  return {y:o.year, m:o.month, d:o.day};
+}
+function jmFirst(jy,jm){                 // Gregorian Date (noon) of the 1st day of Jalali month jm of year jy
+  const target = jy*12 + jm;
+  const g = new Date(jy+621, 2, 21, 12);
+  g.setDate(g.getDate() + Math.round((jm-1)*30.44));
+  for (let i = 0; i < 90; i++){
+    const p = jparts(g), cur = p.y*12 + p.m;
+    if (cur > target) g.setDate(g.getDate() - p.d);          // jump back to the last day of the previous month
+    else if (cur < target) g.setDate(g.getDate() + 1);
+    else if (p.d > 1) g.setDate(g.getDate() - (p.d - 1));
+    else return g;
+  }
+  return g;
+}
+function jmLen(jy,jm){
+  const g = jmFirst(jy,jm); let n = 0;
+  while (jparts(g).m === jm && n < 32){ n++; g.setDate(g.getDate()+1); }
+  return n;
+}
+/*JAL-END*/
+
 /* =====================================================================
    DEMO API  (sample data kept only in this browser's localStorage)
    ===================================================================== */
-const POOL = [
- [ "یک ویدیوی دو دقیقه‌ای برای آشنایی کاربران جدید با امکانات اصلی ضبط کردم و آن را در صفحه‌ی اول قرار دادیم. پیام خوش‌آمدگویی خودکار را هم بازنویسی کردم تا لحن دوستانه‌تری داشته باشد و مسیر شروع را در سه قدم ساده نشان بدهد. فردا بررسی می‌کنم چند نفر ویدیو را تا آخر دیده‌اند.",
-   "راهنمای شروع سریع را به‌روز کردم و تصویرهای قدیمی را با تصویرهای نسخه‌ی جدید عوض کردم. سه کاربر تازه را به یک جلسه‌ی آنلاین کوتاه دعوت کردم تا اولین تجربه‌شان را با هم مرور کنیم. از آن جلسه دو پیشنهاد مهم برای ساده‌تر شدن ثبت‌نام گرفتم.",
-   "برای هر کاربر جدید یک ایمیل شخصی‌تر نوشتم که در آن نام او و کاری که قرار است انجام بدهد آمده است. نرخ بازشدن ایمیل‌ها نسبت به هفته‌ی قبل بهتر شد. همچنین صفحه‌ی سؤالات متداول را کوتاه‌تر کردم تا سریع‌تر خوانده شود.",
-   "یک چک‌لیست سه‌مرحله‌ای داخل خود برنامه اضافه شد که کاربر تازه را قدم‌به‌قدم تا اولین نتیجه همراهی می‌کند. با پنج کاربر جدید تماس کوتاه گرفتم و پرسیدم کجا گیج شده‌اند. بیشتر آن‌ها بخش تنظیمات را سخت پیدا می‌کردند.",
-   "متن صفحه‌ی خوش‌آمدگویی را با تیم طراحی بازبینی کردم و قرار شد عکس‌ها ساده‌تر شوند. یک مثال آماده هم داخل برنامه گذاشتیم تا کاربر جدید با داده‌ی نمونه شروع کند و صفحه‌ی خالی نبیند.",
-   "یک پست آموزشی بلند درباره‌ی چهار کار اول بعد از ثبت‌نام نوشتم و در کانال‌های خودمان منتشر کردم. از چند کاربر جدید خواستم نظرشان را بنویسند و دو نفر فوراً پاسخ دادند. پیشنهادها را در فهرست کارها یادداشت کردم.",
-   "فرایند ثبت‌نام را یک بار از ابتدا مثل یک کاربر کاملاً تازه امتحان کردم و هفت مورد کوچک و آزاردهنده پیدا کردم. چهار مورد را همین امروز اصلاح کردم و بقیه را برای فردا گذاشتم." ],
- [],
- [ "به دوازده پیام پشتیبانی پاسخ دادم و میانگین زمان پاسخ‌گویی حدود یک ساعت شد. دو مشکل تکراری درباره‌ی ورود به حساب پیدا کردم و متن راهنمای جداگانه‌ای برای آن‌ها نوشتم تا دفعه‌ی بعد سریع‌تر جواب بدهیم.",
-   "برای کاربری که نمی‌توانست فایلش را بارگذاری کند، تا پایان مشکل کنارش ماندم. علت تنظیمات مرورگر او بود. همین ماجرا را در بخش سؤالات متداول ثبت کردم تا بقیه هم استفاده کنند.",
-   "فرم تماس را ساده کردم و یک دکمه‌ی گفت‌وگوی سریع اضافه شد. با سه کاربر ناراضی تماس تلفنی گرفتم، عذرخواهی کردم و راه‌حل را توضیح دادم. دو نفر از آن‌ها بعد از تماس رضایتشان را اعلام کردند.",
-   "فهرست مشکل‌های پرتکرار هفته را جمع‌بندی کردم و برای تیم فنی فرستادم. پنج مشکل اول بیش از شصت درصد پیام‌ها را تشکیل می‌دادند. قرار شد دو مورد از آن‌ها این هفته رفع شود.",
-   "پاسخ‌های آماده‌ی پشتیبانی را بازنویسی کردم تا خشک و رسمی نباشند ولی دقیق بمانند. همچنین یک ویدیوی کوتاه برای حل مشکل رایج پرداخت ضبط کردم و لینکش را در پاسخ‌ها قرار دادم.",
-   "امروز یک اعلان داخل برنامه گذاشتیم که از قطعی کوتاه فردا شب خبر می‌دهد تا کاربران غافلگیر نشوند. به چند کاربر مهم هم جداگانه پیام دادم و از آن‌ها برای صبرشان تشکر کردم.",
-   "به همه‌ی پیام‌های بی‌پاسخ هفته‌ی قبل سر زدم و چهار پیام فراموش‌شده را پیدا کردم. برای هر کدام عذرخواهی و پاسخ کامل فرستادم. یک یادآور هفتگی هم برای خودم گذاشتم تا دیگر چیزی جا نماند." ]
+const POOL_Q = [
+  "یک ویدیوی دو دقیقه‌ای برای آشنایی کاربران جدید با امکانات اصلی ضبط کردم و در صفحه‌ی اول گذاشتیم. پیام خوش‌آمدگویی خودکار را هم بازنویسی کردم تا لحن دوستانه‌تری داشته باشد و مسیر شروع را در سه قدم ساده نشان بدهد.",
+  "راهنمای شروع سریع را به‌روز کردم و سه کاربر تازه را به یک جلسه‌ی آنلاین کوتاه دعوت کردم تا اولین تجربه‌شان را با هم مرور کنیم. از آن جلسه دو پیشنهاد مهم برای ساده‌تر شدن ثبت‌نام گرفتم.",
+  "برای هر کاربر جدید یک ایمیل شخصی‌تر نوشتم که در آن نام او و کاری که قرار است انجام بدهد آمده است. نرخ بازشدن ایمیل‌ها نسبت به هفته‌ی قبل بهتر شد.",
+  "یک چک‌لیست سه‌مرحله‌ای داخل خود برنامه اضافه شد که کاربر تازه را قدم‌به‌قدم تا اولین نتیجه همراهی می‌کند. با پنج کاربر جدید تماس کوتاه گرفتم و پرسیدم کجا گیج شده‌اند.",
+  "فرایند ثبت‌نام را یک بار از ابتدا مثل یک کاربر کاملاً تازه امتحان کردم و هفت مورد کوچک و آزاردهنده پیدا کردم. چهار مورد را همین امروز اصلاح کردم.",
+  "یک پست آموزشی درباره‌ی چهار کار اول بعد از ثبت‌نام نوشتم و در کانال‌های خودمان منتشر کردم. دو کاربر جدید فوراً نظرشان را نوشتند."
 ];
-/* how many of the 2 questions the author answered, by days ago */
-const PLAN = {0:1,1:2,2:2,3:2,4:1,5:2,6:2,7:2,8:2,9:2};
-const MK_SEED = [
- [["دکتر احمدی","در مطب ملاقات کردیم و نسخه‌ی آزمایشی را معرفی کردم. علاقه نشان داد و قرار شد هفته‌ی بعد نمایش کامل ببیند."],
-  ["دکتر کریمی","تلفنی صحبت کردیم. فعلاً مشغول بود و خواست ایمیل بفرستم."]],
- [["دکتر موسوی","جلسه‌ی ده‌دقیقه‌ای داشتیم. سؤال دقیقی درباره‌ی قیمت پرسید و جدی به نظر می‌رسید."]],
- [["دکتر رضایی","از طریق یکی از مشتریان قدیمی معرفی شد. پیام اول را فرستادم و منتظر جواب هستم."],
-  ["دکتر نجفی","در همایش با او آشنا شدم و کارت دادم. قرار شد این هفته تماس بگیرم."],
-  ["دکتر حسینی","نسخه‌ی آزمایشی را شروع کرد و بعد از دو روز بازخورد مثبت داد."]]
+const POOL_MK = [
+  ["دکتر احمدی","متخصص پوست. نسخه‌ی آزمایشی را دید و علاقه‌مند بود. هفته‌ی بعد نمایش کامل می‌بیند."],
+  ["دکتر کریمی","دندانپزشک. دغدغه‌اش نوبت‌دهی بود. فردا راهنمای شروع را برایش می‌فرستم."],
+  ["دکتر رضایی","متخصص کودکان. فعلاً فقط ایمیل خواست. یادآور پنجشنبه گذاشتم."],
+  ["دکتر موسوی","جراح عمومی. قیمت را پرسید و جدی به نظر می‌رسید."],
+  ["دکتر نظری","متخصص چشم. نگران امنیت اطلاعات بیماران بود. سند امنیت را می‌فرستم."],
+  ["دکتر صادقی","فیزیوتراپیست. نسخه‌ی آزمایشی را همان روز فعال کرد."],
+  ["دکتر هاشمی","روان‌پزشک. جلسه‌ی معرفی ۲۰ دقیقه‌ای داشتیم."]
 ];
+const POOL_SP = [
+  ["آقای تهرانی","مشکل ورود به حساب داشت. رمز را بازنشانی کردم و راهنما را فرستادم."],
+  ["خانم رحیمی","فایل بارگذاری نمی‌شد. علت تنظیمات مرورگر بود و همان‌جا حل شد."],
+  ["دکتر فرهادی","درباره‌ی پرداخت سؤال داشت. ویدیوی کوتاه آموزشی را فرستادم."],
+  ["آقای کاظمی","از زمان پاسخ‌گویی ناراضی بود. تماس گرفتم و عذرخواهی کردم."],
+  ["خانم نوری","گزارش ماهانه خواست. نمونه‌اش را ایمیل کردم."],
+  ["دکتر امینی","در تنظیم نوبت‌دهی گیر کرده بود. تلفنی قدم‌به‌قدم راهنمایی شد."]
+];
+/* by days ago: [Q1 answered?, marketing count, support count]. Day 3 is left completely empty on purpose. */
+const PLAN = {0:[1,2,2],1:[1,3,1],2:[1,1,0],4:[1,2,2],5:[0,1,1],6:[1,2,0],7:[1,0,2],9:[1,3,1],12:[1,1,1],20:[1,2,1]};
 const SEED_COMMENTS = [
-  {off:0,q:1,j:1,t:"ویدیو عالیه. فقط اگر ممکنه زیرنویس هم داشته باشه.",h:11},
-  {off:0,q:0,j:2,t:"روی گروه فریلنسرها بیشتر کار کن، به نظرم بهترین فرصت همونه.",h:12},
-  {off:1,q:3,j:1,t:"آفرین، ثبت این مشکل‌ها در سؤالات متداول خیلی کمک می‌کنه.",h:17},
-  {off:1,q:1,j:2,t:"لطفاً نتیجه‌ی ویدیو رو فردا بنویس.",h:18},
-  {off:2,q:0,j:1,t:"کد تخفیف رو به همه نده، فقط به معرفی‌شده‌ها بده.",h:16}
+  {off:0,t:1,j:1,txt:"ویدیو عالیه. فقط اگر ممکنه زیرنویس هم داشته باشه.",h:11},
+  {off:0,t:0,j:2,txt:"روی دکتر احمدی بیشتر کار کن، به نظرم نزدیک‌ترین فرصته.",h:12},
+  {off:1,t:100,j:1,txt:"ثبت این مشکل‌ها در سؤالات متداول خیلی کمک می‌کنه.",h:17},
+  {off:2,t:1,j:2,txt:"لطفاً نتیجه‌ی ویدیو رو فردا بنویس.",h:16}
 ];
 
 function createDemoApi(){
-  const KEY = "team-journal-demo-v3";
+  const KEY = "team-journal-demo-v4";
   const members = [
     {id:"u1",name:"سارا",role:"author"},
     {id:"u2",name:"امیر",role:"reviewer"},
@@ -316,60 +412,46 @@ function createDemoApi(){
   ];
   const stamp = (date,h,m=0) => { const d = parseISO(date); d.setHours(h,m,0,0); return d.toISOString(); };
   function seed(){
-    const t = todayISO(), answers = [], comments = [], marketing = [], dates = new Set([t]);
-    let cid = 1, mid = 1;
-    for (const [off,count] of Object.entries(PLAN)){
+    const t = todayISO(), answers = [], comments = [], items = [], dates = new Set([t]);
+    let cid = 1;
+    for (const [off,[q,mk,sp]] of Object.entries(PLAN)){
       const date = addDays(t,-Number(off)); dates.add(date);
-      [1,3].slice(0,count).forEach(q =>
-        answers.push({date,q,user_id:"u1",body:POOL[q-1][(Number(off)+q*2)%7],updated_at:stamp(date,9+q)}));
-      if (count > 0) MK_SEED[Number(off) % MK_SEED.length].forEach((m,k) =>
-        marketing.push({id:"m"+(mid++),date,user_id:"u1",name:m[0],notes:m[1],created_at:stamp(date,12+k)}));
+      if (q) answers.push({date,q:1,user_id:"u1",body:POOL_Q[Number(off) % POOL_Q.length],updated_at:stamp(date,10)});
+      for (let k=0;k<mk;k++){ const [n,x] = POOL_MK[(Number(off)+k*2) % POOL_MK.length]; items.push({id:`m-${off}-${k}`,date,kind:"marketing",user_id:"u1",name:n,notes:x,created_at:stamp(date,12+k)}); }
+      for (let k=0;k<sp;k++){ const [n,x] = POOL_SP[(Number(off)+k*2) % POOL_SP.length]; items.push({id:`s-${off}-${k}`,date,kind:"support",user_id:"u1",name:n,notes:x,created_at:stamp(date,15+k)}); }
     }
     for (const c of SEED_COMMENTS){
       const date = addDays(t,-c.off);
-      comments.push({id:"c"+(cid++),date,q:c.q,user_id:members[c.j].id,body:c.t,created_at:stamp(date,c.h,20)});
+      comments.push({id:"c"+(cid++),date,q:c.t,user_id:members[c.j].id,body:c.txt,created_at:stamp(date,c.h,20)});
     }
-    return {meId:"u1",answers,comments,marketing,dates:[...dates]};
+    return {meId:"u1",answers,comments,items,dates:[...dates]};
   }
   let db = null;
   try { db = JSON.parse(localStorage.getItem(KEY)); } catch {}
-  if (!db || !Array.isArray(db.answers)) db = seed();
+  if (!db || !Array.isArray(db.answers) || !Array.isArray(db.items)) db = seed();
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} };
   save();
   const me = () => members.find(m => m.id === db.meId);
+  const author = () => { if (me().role !== "author") throw new Error("not author"); };
+  const ensureDay = date => { if (!db.dates.includes(date)) db.dates.push(date); };
   return {
-    mode:"demo",
+    mode:"demo", needsUpdate:false,
     async getSession(){ return {id:me().id,email:"demo@local"}; },
     async members(){ return members.map(m => ({...m})); },
     switchUser(id){ db.meId = id; save(); },
     async listDays(){ return db.dates.slice().sort().reverse().map(date => ({date})); },
     async loadEntry(date){
+      const byTime = (a,b) => a.created_at.localeCompare(b.created_at);
       return {
+        exists: db.dates.includes(date),
         answers: db.answers.filter(a=>a.date===date).map(a=>({...a})),
-        comments: db.comments.filter(c=>c.date===date).map(c=>({...c}))
-          .sort((a,b)=>a.created_at.localeCompare(b.created_at)),
-        marketing: (db.marketing || []).filter(m=>m.date===date).map(m=>({...m}))
-          .sort((a,b)=>a.created_at.localeCompare(b.created_at)),
-        questions: normQs((db.questions || {})[date])
+        comments: db.comments.filter(c=>c.date===date).map(c=>({...c})).sort(byTime),
+        items: db.items.filter(x=>x.date===date).map(x=>({...x})).sort(byTime),
+        questions: null
       };
     },
-    async saveMarketing(date,item){
-      await sleep(200);
-      if (me().role !== "author") throw new Error("not author");
-      db.marketing = db.marketing || [];
-      if (!db.dates.includes(date)) db.dates.push(date);
-      if (item.id){
-        const m = db.marketing.find(x => x.id === item.id); if (!m) throw new Error("gone");
-        m.name = item.name; m.notes = item.notes; save(); return {...m};
-      }
-      const m = {id:"m"+Date.now()+Math.random().toString(36).slice(2,6),date,user_id:db.meId,name:item.name,notes:item.notes,created_at:new Date().toISOString()};
-      db.marketing.push(m); save(); return {...m};
-    },
-    async deleteMarketing(id){ db.marketing = (db.marketing || []).filter(m => m.id !== id); save(); },
     async saveAnswer(date,q,body){
-      await sleep(250);
-      if (me().role !== "author") throw new Error("not author");
-      if (!db.dates.includes(date)) db.dates.push(date);
+      await sleep(250); author(); ensureDay(date);
       const i = db.answers.findIndex(a=>a.date===date&&a.q===q&&a.user_id===db.meId);
       if (!body.trim()){ if (i>=0) db.answers.splice(i,1); }
       else if (i>=0){ db.answers[i].body = body; db.answers[i].updated_at = new Date().toISOString(); }
@@ -382,6 +464,17 @@ function createDemoApi(){
       db.comments.push(c); save(); return {...c};
     },
     async deleteComment(id){ db.comments = db.comments.filter(c=>c.id!==id); save(); },
+    async saveItem(date,{id,kind,name,notes}){
+      await sleep(200); author();
+      if (id){
+        const it = db.items.find(x=>x.id===id); if (!it) throw new Error("missing");
+        it.name = name; it.notes = notes; save(); return {...it};
+      }
+      ensureDay(date);
+      const it = {id:"i"+Date.now()+Math.random().toString(36).slice(2,6),date,kind,user_id:db.meId,name,notes,created_at:new Date().toISOString()};
+      db.items.push(it); save(); return {...it};
+    },
+    async deleteItem(id){ author(); db.items = db.items.filter(x=>x.id!==id); save(); },
     async signOut(){}, async updatePassword(){}
   };
 }
@@ -391,13 +484,24 @@ function createDemoApi(){
    ===================================================================== */
 async function createLiveApi(){
   const { createClient } = await import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm");
+
+  /* The login is kept ONLY for this tab (sessionStorage): opening the link again in a new tab or
+     after closing the browser always shows the login page. */
+  const mem = {};
+  const store = {
+    getItem:k => { try { return sessionStorage.getItem(k); } catch { return k in mem ? mem[k] : null; } },
+    setItem:(k,v) => { try { sessionStorage.setItem(k,v); } catch { mem[k] = v; } },
+    removeItem:k => { try { sessionStorage.removeItem(k); } catch { delete mem[k]; } }
+  };
+  /* remove a login that an older version of this page saved permanently on this device */
+  try { Object.keys(localStorage).filter(k => /^sb-.*-auth-token/.test(k)).forEach(k => localStorage.removeItem(k)); } catch {}
+
   const sb = createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
-    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storage:store}
   });
-  let teamId = null, uid = null;
+  let teamId = null, uid = null, needsUpdate = false;
   const must = ({data,error}) => { if (error) throw error; return data; };
 
-  // One row per day. `questions` is a snapshot of the 3 question texts used that day.
   async function entryRow(date, create){
     let row = must(await sb.from("entries").select("id,questions").eq("entry_date",date).maybeSingle());
     if (!row && create){
@@ -408,6 +512,7 @@ async function createLiveApi(){
   }
   return {
     mode:"live",
+    get needsUpdate(){ return needsUpdate; },
     async getSession(){
       const { data } = await sb.auth.getSession();
       const u = data.session?.user; if (!u) return null;
@@ -427,27 +532,32 @@ async function createLiveApi(){
       return rows.map(r => ({id:r.user_id,name:r.display_name,role:r.role}));
     },
     async listDays(){
-      const rows = must(await sb.from("entries").select("entry_date").order("entry_date",{ascending:false}).limit(120));
+      const rows = must(await sb.from("entries").select("entry_date").order("entry_date",{ascending:false}).limit(1000));
       return rows.map(r => ({date:r.entry_date}));
     },
     async loadEntry(date){
       const row = await entryRow(date,false);
-      if (!row) return {answers:[],comments:[],marketing:[],questions:null};
+      if (!row) return {exists:false,answers:[],comments:[],items:[],questions:null};
       const id = row.id;
-      const [a,c,mk] = await Promise.all([
+      const [a,c] = await Promise.all([
         sb.from("answers").select("question_no,user_id,body,updated_at").eq("entry_id",id),
-        sb.from("comments").select("id,question_no,user_id,body,created_at").eq("entry_id",id).order("created_at"),
-        sb.from("marketing_items").select("id,user_id,doctor_name,notes,created_at").eq("entry_id",id).order("created_at")
+        sb.from("comments").select("id,question_no,user_id,body,created_at").eq("entry_id",id).order("created_at")
       ]);
+      let it = await sb.from("marketing_items").select("id,user_id,kind,doctor_name,notes,created_at").eq("entry_id",id).order("created_at");
+      if (it.error && /kind/i.test(it.error.message || "")){          // database not updated yet: only the old list exists
+        it = await sb.from("marketing_items").select("id,user_id,doctor_name,notes,created_at").eq("entry_id",id).order("created_at");
+      }
+      needsUpdate = Boolean(it.error) || (it.data || []).some(r => r.kind === undefined);
+      const items = it.error ? [] : it.data.map(r => ({id:r.id,date,kind:r.kind || "marketing",user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at}));
       return {
+        exists:true, items,
         answers: must(a).map(r => ({date,q:r.question_no,user_id:r.user_id,body:r.body,updated_at:r.updated_at})),
         comments: must(c).map(r => ({id:r.id,date,q:r.question_no,user_id:r.user_id,body:r.body,created_at:r.created_at})),
-        marketing: must(mk).map(r => ({id:r.id,date,user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at})),
         questions: normQs(row.questions)
       };
     },
     async saveAnswer(date,q,body){
-      const row = await entryRow(date, date === todayISO());
+      const row = await entryRow(date, true);
       if (!row) throw new Error("no entry");
       const id = row.id;
       if (!body.trim()){
@@ -461,22 +571,25 @@ async function createLiveApi(){
     async addComment(date,q,body){
       const row = await entryRow(date, false);
       if (!row) throw new Error("no entry");
-      const id = row.id;
-      const r = must(await sb.from("comments").insert({team_id:teamId,entry_id:id,question_no:q,user_id:uid,body})
+      const r = must(await sb.from("comments").insert({team_id:teamId,entry_id:row.id,question_no:q,user_id:uid,body})
         .select("id,created_at").single());
       return {id:r.id,date,q,user_id:uid,body,created_at:r.created_at};
     },
     async deleteComment(id){ must(await sb.from("comments").delete().eq("id",id)); },
-    async saveMarketing(date,item){
-      const row = await entryRow(date, date === todayISO());
-      if (!row) throw new Error("no entry");
-      const cols = "id,user_id,doctor_name,notes,created_at";
-      const r = item.id
-        ? must(await sb.from("marketing_items").update({doctor_name:item.name,notes:item.notes}).eq("id",item.id).select(cols).single())
-        : must(await sb.from("marketing_items").insert({team_id:teamId,entry_id:row.id,user_id:uid,doctor_name:item.name,notes:item.notes}).select(cols).single());
-      return {id:r.id,date,user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at};
+    async saveItem(date,{id,kind,name,notes}){
+      if (needsUpdate) throw new Error("update needed");
+      const cols = "id,user_id,kind,doctor_name,notes,created_at";
+      let r;
+      if (id){
+        r = must(await sb.from("marketing_items").update({doctor_name:name,notes}).eq("id",id).select(cols).single());
+      } else {
+        const row = await entryRow(date, true);
+        if (!row) throw new Error("no entry");
+        r = must(await sb.from("marketing_items").insert({team_id:teamId,entry_id:row.id,user_id:uid,kind,doctor_name:name,notes}).select(cols).single());
+      }
+      return {id:r.id,date,kind:r.kind,user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at};
     },
-    async deleteMarketing(id){ must(await sb.from("marketing_items").delete().eq("id",id)); }
+    async deleteItem(id){ must(await sb.from("marketing_items").delete().eq("id",id)); }
   };
 }
 
@@ -484,17 +597,35 @@ async function createLiveApi(){
    APP
    ===================================================================== */
 let api;
-const state = {user:null,members:[],me:null,author:null,isAuthor:false,days:[],next:0,data:{},newItems:{}};
-let flushers = [], pollTimer = null, renderedToday = todayISO();
+const state = {user:null,members:[],me:null,author:null,isAuthor:false,date:null,entry:null,qIds:[],dates:new Set()};
+let pollTimer = null, renderedToday = todayISO(), drafts = {}, seq = 0;
 const app = $("#app");
 const memberOf = id => state.members.find(m => m.id === id);
 const colorOf = id => COLORS[Math.max(0,state.members.findIndex(m => m.id === id)) % 3];
 const avatar = (m,cls="") => `<span class="avatar ${cls}" style="--mc:${colorOf(m.id)}" aria-hidden="true">${esc([...m.name][0] || "؟")}</span>`;
-const qsFor = date => (state.data[date] && state.data[date].questions) || QUESTIONS;
-const answerOf = (date,q) => (state.data[date]?.answers || []).find(a => a.q===q && state.author && a.user_id===state.author.id && a.body.trim());
-const cardEl = (date,q) => $(`.q[data-date="${date}"][data-q="${q}"]`);
+const answerOf = q => ((state.entry && state.entry.answers) || []).find(a => a.q===q && state.author && a.user_id===state.author.id && a.body.trim());
+const itemsOf = kind => ((state.entry && state.entry.items) || []).filter(i => i.kind===kind);
+const cardEl = t => $(`.card[data-t="${t}"]`);
+const sectionOf = t => SECTIONS.find(s => s.thread === t);
+const hasContent = t => { const s = sectionOf(t); return s ? itemsOf(s.kind).length > 0 : !!answerOf(t); };
+const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
+const lsSet = (k,v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k,v); } catch {} };
+const loadingHTML = () => `<div class="loading"><div class="dots"><span></span><span></span><span></span></div></div>`;
 
-function loadingView(){ app.innerHTML = `<div class="loading"><div class="dots"><span></span><span></span><span></span></div></div>`; }
+/* ---- session: only while this tab is open, and only while it is used ---- */
+const touch = () => { try { sessionStorage.setItem("tj-last", String(Date.now())); } catch {} };
+const idleExpired = () => { try { const t = Number(sessionStorage.getItem("tj-last")); return t > 0 && Date.now() - t > IDLE_MS; } catch { return false; } };
+if (LIVE){
+  let lastWrite = 0;
+  const bump = () => { const n = Date.now(); if (n - lastWrite > 10000){ lastWrite = n; touch(); } };
+  ["pointerdown","keydown","input","scroll","touchstart"].forEach(ev => addEventListener(ev, bump, {passive:true,capture:true}));
+}
+async function signOut(){
+  try { await api.signOut(); } catch {}
+  try { sessionStorage.removeItem("tj-last"); } catch {}
+  location.reload();
+}
+
 function errorView(msg){
   app.innerHTML = `<div class="center"><div class="card login reveal">
     <h1>مشکل در اتصال</h1><p>${esc(msg)}</p>
@@ -509,7 +640,8 @@ function loginView(){
     <input class="field ltr" id="em" type="email" inputmode="email" autocomplete="username" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="ایمیل" required>
     <input class="field ltr" id="pw" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="رمز عبور" required>
     <div class="err" id="er" role="alert"></div>
-    <button class="btn block" id="go" type="submit">ورود</button></form></div>`;
+    <button class="btn block" id="go" type="submit">ورود</button>
+    <div class="hint">با بستن صفحه یا ۳۰ دقیقه بی‌فعالیتی، دوباره باید وارد شوی.</div></form></div>`;
   $("#lf").onsubmit = async e => {
     e.preventDefault();
     const b = $("#go"); b.disabled = true; $("#er").textContent = "";
@@ -522,11 +654,9 @@ function loginView(){
         : `ورود انجام نشد. دلیل (برای پشتیبانی): <span class="ltr" style="display:block;direction:ltr;text-align:left">${esc(m || "unknown error")}</span>`;
       b.disabled = false; return;
     }
+    touch();
     try { await enter(u); }
-    catch (err) {
-      console.error(err);
-      errorView("ورود انجام شد ولی خواندن اطلاعات تیم ممکن نشد: " + ((err && err.message) || "unknown error"));
-    }
+    catch (err) { console.error(err); errorView("ورود انجام شد ولی خواندن اطلاعات تیم ممکن نشد: " + ((err && err.message) || "unknown error")); }
   };
 }
 function noAccessView(){
@@ -535,74 +665,109 @@ function noAccessView(){
     <button class="btn block ghost" id="so">خروج</button></div></div>`;
   $("#so").onclick = signOut;
 }
-async function signOut(){ await api.signOut(); location.reload(); }
 
 async function enter(user){
-  loadingView();
+  app.innerHTML = loadingHTML();
   state.user = user;
   state.members = await api.members();
   state.me = memberOf(user.id);
   if (!state.me) return noAccessView();
   state.author = state.members.find(m => m.role === "author") || null;
   state.isAuthor = state.me.role === "author";
-  showHome();
+  renderShell();
+  refreshDates();
+  showDay(parseRoute());
 }
 
-/* ---- home: one section per day ---- */
-async function showHome(){
-  flushAll(); clearInterval(pollTimer); loadingView();
-  const today = todayISO(); renderedToday = today;
-  let list;
-  try { list = await api.listDays(); }
-  catch { return errorView("اطلاعات بارگذاری نشد. اتصال اینترنت را بررسی کنید."); }
-  state.days = [today, ...list.map(d => d.date).filter(d => d < today)];
-  state.next = 0; state.data = {}; state.newItems = {};
+function renderShell(){
   const demoBar = api.mode === "demo"
     ? `<div class="banner">نسخه‌ی نمایشی — داده‌ها نمونه‌اند و فقط روی همین دستگاه می‌مانند. هنوز به Supabase وصل نیست.</div>` : "";
   app.innerHTML = `
     <header class="topbar"><h1>ژورنال تیم</h1>
       <button class="avatar-btn" id="menu" aria-label="تنظیمات">${avatar(state.me)}</button></header>
-    ${demoBar}
-    <div id="days"></div><div id="more" class="more"></div>`;
+    ${demoBar}<div id="notice"></div><main id="view"></main>`;
   $("#menu").onclick = openSheet;
-  await appendDays(PAGE_DAYS);
-  pollTimer = setInterval(() => { if (!document.hidden) refreshRecent(); }, 30000);
+}
+async function refreshDates(){
+  try { state.dates = new Set((await api.listDays()).map(d => d.date)); } catch {}
 }
 
-async function appendDays(n){
-  const slice = state.days.slice(state.next, state.next + n);
-  try {
-    const res = await Promise.all(slice.map(d => api.loadEntry(d)));
-    slice.forEach((d,i) => state.data[d] = res[i]);
-  } catch { toast("بارگذاری نشد. دوباره تلاش کن."); renderMore(); return; }
-  state.next += slice.length;
-  const wrap = document.createElement("div");
-  wrap.innerHTML = slice.map(daySection).join("");
-  const box = $("#days");
-  while (wrap.firstChild) box.append(wrap.firstChild);
-  slice.forEach(bindDay);
-  renderMore();
+/* ---- routing: one date per page, e.g. …/#/d/2026-10-12 ---- */
+function parseRoute(){
+  const m = location.hash.match(/^#\/d\/(\d{4}-\d{2}-\d{2})$/), today = todayISO();
+  let d = m && validISO(m[1]) ? m[1] : today;
+  if (d > today) d = today;
+  return d;
 }
-function renderMore(){
-  const el = $("#more");
-  if (state.next < state.days.length){
-    el.innerHTML = `<button class="btn block ghost" id="moreBtn">نمایش روزهای قبل</button>`;
-    $("#moreBtn").onclick = async e => { e.target.disabled = true; await appendDays(PAGE_DAYS); };
-  } else {
-    el.innerHTML = state.days.length > 1 ? `<div class="end-note">همه‌ی روزها نمایش داده شد.</div>` : "";
+function go(date){
+  const h = date === todayISO() ? "#/" : "#/d/" + date;
+  if (location.hash === h || (h === "#/" && !location.hash)) showDay(date); else location.hash = h;
+}
+addEventListener("hashchange", () => { if (state.me) showDay(parseRoute()); });
+
+/* ---- which questions to show for this day ---- */
+function visibleQuestions(){
+  const e = state.entry, base = e.questions || QUESTIONS, cur = new Set(QUESTIONS.map(q => q.id));
+  const answered = new Set((e.answers || []).filter(a => state.author && a.user_id === state.author.id && a.body.trim()).map(a => a.q));
+  const title = id => (base.find(q => q.id === id) || QUESTIONS.find(q => q.id === id) || {}).title || LEGACY_TITLES[id] || "سؤال قبلی";
+  const ids = new Set();
+  base.forEach(q => { if (cur.has(q.id) || answered.has(q.id)) ids.add(q.id); });
+  answered.forEach(id => ids.add(id));
+  return [...ids].sort((a,b) => a-b).map(id => ({id,title:title(id)}));
+}
+
+/* ---- the day page ---- */
+async function showDay(date){
+  clearInterval(pollTimer);
+  const view = $("#view"); if (!view) return;
+  state.date = date; drafts = {};
+  view.innerHTML = loadingHTML();
+  let entry;
+  try { entry = await api.loadEntry(date); }
+  catch (e) {
+    console.error(e);
+    if (state.date === date){
+      view.innerHTML = `<div class="card"><p style="margin:0 0 14px">اطلاعات بارگذاری نشد. اتصال اینترنت را بررسی کن.</p><button class="btn block" id="retry">تلاش دوباره</button></div>`;
+      $("#retry").onclick = () => showDay(date);
+    }
+    return;
   }
+  if (state.date !== date) return;
+  state.entry = entry;
+  $("#notice").innerHTML = api.needsUpdate
+    ? `<div class="banner">بخش پشتیبانی هنوز در دیتابیس فعال نشده است. فایل supabase-update-3.sql را در Supabase اجرا کن.</div>` : "";
+  const qs = visibleQuestions();
+  state.qIds = qs.map(q => q.id);
+  view.innerHTML = dayHTML(date, qs);
+  $("#prev").onclick = () => go(addDays(date,-1));
+  $("#next").onclick = () => go(addDays(date,1));
+  $("#cal").onclick = openCalendar;
+  const gt = $("#gotoToday"); if (gt) gt.onclick = () => go(todayISO());
+  qs.forEach(q => {
+    if (state.isAuthor) bindAuthorCard(q.id, date); else renderAnswerView(q.id);
+  });
+  SECTIONS.forEach(sec => bindSection(sec, date));
+  state.qIds.concat(SECTIONS.map(s => s.thread)).forEach(t => { renderComments(t); bindComments(t, date); });
+  updateSummary();
+  window.scrollTo(0,0);
+  pollTimer = setInterval(() => { if (!document.hidden) refreshCurrent(); }, 30000);
 }
 
-function daySection(date){
+function dayHTML(date, qs){
   const d = parseISO(date), isToday = date === todayISO();
-  return `<section class="day" data-date="${date}">
-    <div class="day-head reveal">
-      <div><div class="wk">${esc(F.weekday.format(d))}</div><div class="dt">${esc(dayMonth(date))}</div><div class="yr">${esc(F.year.format(d))}</div></div>
-      <div class="side">${isToday ? `<span class="badge">امروز</span>` : ""}<span class="prog"></span></div>
+  return `
+    <div class="dayhead reveal">
+      <div class="info"><div class="wk">${esc(F.weekday.format(d))}</div><div class="dt">${esc(dayMonth(date))}</div><div class="yr">${esc(F.year.format(d))}</div></div>
+      <div class="tools">
+        <button class="iconbtn" id="prev" aria-label="روز قبل">${svgPrev}</button>
+        <button class="iconbtn accent" id="cal" aria-label="انتخاب تاریخ از تقویم">${svgCal}</button>
+        <button class="iconbtn" id="next" aria-label="روز بعد" ${isToday ? "disabled" : ""}>${svgNext}</button>
+      </div>
     </div>
-    ${qsFor(date).map((qo,i) => questionCard(date,qo,i)).join("")}
-    ${marketingCard(date)}
-  </section>`;
+    <div class="sum reveal" id="sum" style="--i:1"></div>
+    ${qs.map((q,i) => questionCard(q,i)).join("")}
+    ${SECTIONS.map((s,i) => sectionCard(s,i)).join("")}
+    ${isToday ? "" : `<button class="btn block ghost today-link" id="gotoToday">برو به امروز</button>`}`;
 }
 
 const commentsBlock = () => `<div class="comments">
@@ -612,193 +777,56 @@ const commentsBlock = () => `<div class="comments">
       <div class="ccount"></div>
     </div>`;
 
-function questionCard(date,qo,i){
-  const q = qo.id;
+function questionCard(q,i){
   const body = state.isAuthor
-    ? `<label class="label" for="ta-${date}-${q}">پاسخ تو</label>
-       <textarea id="ta-${date}-${q}" placeholder="اینجا بنویس…"></textarea>
+    ? `<label class="label" for="ta-${q.id}">پاسخ تو</label>
+       <textarea id="ta-${q.id}" placeholder="اینجا بنویس…"></textarea>
        <div class="submit-row"><span class="save-state" data-s=""></span>
          <button class="btn sm submit" type="button" disabled>ثبت جواب</button></div>`
     : `<div class="aview"></div>`;
-  return `<section class="card q reveal" data-date="${date}" data-q="${q}" style="--i:${i+1}">
-    <div class="q-head"><span class="q-num">${fa(i+1)}</span><h2>${esc(qo.title)}</h2></div>
+  return `<section class="card q reveal" data-t="${q.id}" style="--i:${i+2}">
+    <div class="q-head"><span class="q-num">${fa(i+1)}</span><h2>${esc(q.title)}</h2></div>
     ${body}
     ${commentsBlock()}
   </section>`;
 }
 
-/* «بازاریابی»: a separate section where the author adds as many people as needed. Feedback thread id = 0. */
-function marketingCard(date){
-  return `<section class="card q mk reveal" data-date="${date}" data-q="0" style="--i:4">
-    <div class="q-head"><span class="q-num">★</span><h2>بازاریابی</h2></div>
-    <div class="mlist"></div>
-    ${state.isAuthor ? `<button class="btn ghost block add-btn" type="button">＋ افزودن نفر</button>` : ""}
+function sectionCard(sec,i){
+  return `<section class="card sec reveal" data-t="${sec.thread}" data-kind="${sec.kind}" style="--i:${i+3}">
+    <div class="sec-head"><h2>${esc(sec.title)}</h2><span class="sec-count"></span>
+      ${state.isAuthor ? `<button class="add" type="button" aria-label="افزودن به ${esc(sec.title)}">${svgPlus}</button>` : ""}</div>
+    <div class="sec-list"></div>
     ${commentsBlock()}
   </section>`;
 }
 
-const hasContent = (date,q) => q === 0 ? ((state.data[date].marketing || []).length > 0) : !!answerOf(date,q);
-
-function bindDay(date){
-  qsFor(date).forEach(qo => {
-    const q = qo.id, card = cardEl(date,q);
-    if (state.isAuthor) bindAuthorCard(card, q, date); else renderAnswerView(date,q);
-    renderComments(date,q); bindComments(card, q, date);
-  });
-  bindMarketing(date);
-  updateProg(date);
+function updateSummary(){
+  const qs = state.qIds, n = qs.filter(id => answerOf(id)).length;
+  const counts = SECTIONS.map(s => ({s, n: itemsOf(s.kind).length}));
+  const pills = [];
+  if (state.date === todayISO()) pills.push(`<span class="pill today">امروز</span>`);
+  if (qs.length) pills.push(`<span class="pill ${n === qs.length ? "ok" : ""}">${fa(n)} از ${fa(qs.length)} پاسخ</span>`);
+  counts.forEach(c => { if (c.n) pills.push(`<span class="pill">${fa(c.n)} ${esc(c.s.title)}</span>`); });
+  if (!n && !counts.some(c => c.n)) pills.push(`<span class="pill">هنوز چیزی ثبت نشده</span>`);
+  $("#sum").innerHTML = pills.join("");
 }
 
-function updateProg(date){
-  const qs = qsFor(date), n = qs.filter(qo => answerOf(date,qo.id)).length;
-  const mk = (state.data[date].marketing || []).length;
-  const el = $(`.day[data-date="${date}"] .prog`);
-  if (el) el.textContent = `${fa(n)} از ${fa(qs.length)} پاسخ` + (mk ? ` · ${fa(mk)} بازاریابی` : "");
-}
-
-/* ---- marketing section ---- */
-const mNewKey = date => `tj-mnew:${state.me.id}:${date}`;
-function saveNewDrafts(date){
-  const arr = state.newItems[date] || [];
-  lsSet(mNewKey(date), arr.length ? JSON.stringify(arr) : null);
-}
-function bindMarketing(date){
-  const card = cardEl(date,0);
-  let drafts = [];
-  if (state.isAuthor){ try { drafts = JSON.parse(lsGet(mNewKey(date)) || "[]"); } catch {} }
-  state.newItems[date] = Array.isArray(drafts) ? drafts : [];
-  renderMarketing(date);
-  renderComments(date,0); bindComments(card, 0, date);
-  if (state.isAuthor){
-    $(".add-btn", card).onclick = () => {
-      const tmp = "n" + Date.now().toString(36) + Math.random().toString(36).slice(2,5);
-      const el = itemEl(date, {tmp,name:"",notes:""});
-      $(".mlist", card).append(el); el._grow(); $(".mname", el).focus();
-    };
-  }
-}
-function renderMarketing(date){
-  const list = $(".mlist", cardEl(date,0)), items = state.data[date].marketing || [];
-  if (!state.isAuthor){
-    list.innerHTML = items.length
-      ? items.map(m => `<div class="mview"><div class="mn">${esc(m.name)}</div>${m.notes ? `<div class="md">${esc(m.notes)}</div>` : ""}</div>`).join("")
-      : `<div class="aview empty"><div class="body">هنوز موردی ثبت نشده است.</div></div>`;
-    return;
-  }
-  list.innerHTML = "";
-  items.forEach(m => { const e = itemEl(date,{id:m.id,name:m.name,notes:m.notes}); list.append(e); e._grow(); });
-  (state.newItems[date] || []).forEach(n => { const e = itemEl(date,{tmp:n.tmp,name:n.name,notes:n.notes}); list.append(e); e._grow(); });
-}
-function itemEl(date, item){
-  const el = document.createElement("div"); el.className = "mitem";
-  el.innerHTML = `<input class="field mname" maxlength="200" placeholder="نام پزشک" autocomplete="off">
-    <textarea class="mnotes" placeholder="توضیحات"></textarea>
-    <div class="submit-row"><span class="save-state" data-s=""></span>
-      <span class="acts"><button class="link-del" type="button">حذف</button>
-      <button class="btn sm submit" type="button" disabled>ثبت</button></span></div>`;
-  const nm = $(".mname", el), nt = $(".mnotes", el), st = $(".save-state", el), btn = $(".submit", el), del = $(".link-del", el);
-  const cur = {id:item.id || null, tmp:item.tmp || null};
-  nm.value = item.name || ""; nt.value = item.notes || "";
-  el._grow = () => autoGrow(nt,110);
-  const setSt = (s,t) => { st.dataset.s = s; st.textContent = t; };
-  const saved = () => cur.id ? (state.data[date].marketing || []).find(m => m.id === cur.id) : null;
-  function refresh(){
-    const sv = saved(), has = nm.value.trim().length > 0;
-    if (!sv){ btn.textContent = "ثبت"; btn.disabled = !has; setSt("draft", has ? "ثبت نشده — هنوز کسی نمی‌بیند" : "نام پزشک را بنویس"); }
-    else if (nm.value === sv.name && nt.value === sv.notes){ btn.textContent = "ثبت شده ✓"; btn.disabled = true; setSt("saved","ثبت شد — دیگران می‌بینند"); }
-    else { btn.textContent = "ثبت تغییرات"; btn.disabled = !has; setSt("draft", has ? "تغییرات هنوز ثبت نشده" : "نام پزشک را بنویس"); }
-  }
-  function persistNew(){
-    if (cur.id) return;
-    const arr = state.newItems[date] || (state.newItems[date] = []);
-    let n = arr.find(x => x.tmp === cur.tmp); if (!n){ n = {tmp:cur.tmp}; arr.push(n); }
-    n.name = nm.value; n.notes = nt.value; saveNewDrafts(date);
-  }
-  const dropNew = () => { state.newItems[date] = (state.newItems[date] || []).filter(x => x.tmp !== cur.tmp); saveNewDrafts(date); };
-  [nm,nt].forEach(x => x.addEventListener("input", () => { if (x === nt) autoGrow(nt,110); persistNew(); refresh(); }));
-  btn.onclick = async () => {
-    btn.disabled = true; btn.textContent = "در حال ثبت…";
-    try {
-      const m = await api.saveMarketing(date, {id:cur.id, name:nm.value.trim(), notes:nt.value.trim()});
-      const d = state.data[date]; d.marketing = d.marketing || [];
-      const i = d.marketing.findIndex(x => x.id === m.id);
-      if (i >= 0) d.marketing[i] = m; else d.marketing.push(m);
-      if (!cur.id){ dropNew(); cur.id = m.id; }
-      nm.value = m.name; nt.value = m.notes; autoGrow(nt,110);
-      renderComments(date,0); updateProg(date); refresh(); toast("ثبت شد");
-    } catch { toast("ثبت نشد. اتصال را بررسی کن."); refresh(); }
-  };
-  del.onclick = async () => {
-    if (cur.id){
-      if (!confirm("این مورد برای همیشه حذف شود؟")) return;
-      try { await api.deleteMarketing(cur.id); } catch { return toast("حذف نشد."); }
-      const d = state.data[date]; d.marketing = (d.marketing || []).filter(x => x.id !== cur.id);
-      renderComments(date,0); updateProg(date);
-    } else dropNew();
-    el.remove();
-  };
-  refresh();
-  return el;
-}
-
-function renderAnswerView(date,q){
-  const box = $(".aview", cardEl(date,q)), a = answerOf(date,q), au = state.author;
+/* ---- written answers ---- */
+function renderAnswerView(q){
+  const box = $(".aview", cardEl(q)), a = answerOf(q), au = state.author;
   box.className = "aview" + (a ? "" : " empty");
   box.innerHTML = (a && au ? `<div class="who">${avatar(au,"sm")}<span>${esc(au.name)}</span></div>` : "") +
     `<div class="body">${a ? esc(a.body) : "هنوز پاسخی ثبت نشده است."}</div>`;
 }
 
-function renderComments(date,q){
-  const card = cardEl(date,q);
-  const list = (state.data[date]?.comments || []).filter(c => c.q === q);
-  $(".ch", card).textContent = list.length ? `فیدبک‌ها (${fa(list.length)})` : "فیدبک‌ها";
-  $(".clist", card).innerHTML = list.map(c => {
-    const m = memberOf(c.user_id) || {id:c.user_id,name:"؟"};
-    return `<div class="comment">${avatar(m,"sm")}<div class="bubble">
-      <div class="meta"><b>${esc(m.name)}</b><span>${esc(F.time.format(new Date(c.created_at)))}</span>
-      ${c.user_id===state.me.id ? `<button class="del" data-id="${esc(c.id)}">حذف</button>` : ""}</div>
-      <div class="txt">${esc(c.body)}</div></div></div>`;
-  }).join("");
-  $(".cform", card).hidden = !hasContent(date,q);   // feedback only makes sense under existing content
-}
-
-function bindComments(card, q, date){
-  const form = $(".cform", card), input = $(".field", form), btn = $(".send", form);
-  const cc = $(".ccount", card);
-  input.addEventListener("input", () => {
-    btn.disabled = !input.value.trim();
-    cc.textContent = input.value.length ? `${fa(input.value.length)} / ${fa(MAX_COMMENT)}` : "";
-  });
-  form.onsubmit = async e => {
-    e.preventDefault();
-    const body = input.value.trim(); if (!body) return;
-    btn.disabled = true;
-    try {
-      const c = await api.addComment(date,q,body);
-      state.data[date].comments.push(c); input.value = ""; cc.textContent = ""; renderComments(date,q);
-    } catch { toast("ارسال نشد. دوباره تلاش کن."); btn.disabled = false; }
-  };
-  $(".clist", card).onclick = async e => {
-    const b = e.target.closest(".del"); if (!b) return;
-    try {
-      await api.deleteComment(b.dataset.id);
-      state.data[date].comments = state.data[date].comments.filter(c => String(c.id) !== b.dataset.id);
-      renderComments(date,q);
-    } catch { toast("حذف نشد."); }
-  };
-}
-
 function autoGrow(ta, min = 170){ ta.style.height = "auto"; ta.style.height = Math.max(min, ta.scrollHeight) + "px"; }
 
-/* Drafts live only in this phone's browser until the author presses «ثبت جواب». */
-const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
-const lsSet = (k,v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k,v); } catch {} };
-
-function bindAuthorCard(card, q, date){
-  const ta = $("textarea", card), st = $(".save-state", card), btn = $(".submit", card);
+/* Nothing is visible to the others until the author presses «ثبت جواب». The draft stays on this phone. */
+function bindAuthorCard(q, date){
+  const card = cardEl(q), ta = $("textarea", card), st = $(".save-state", card), btn = $(".submit", card);
   const key = `tj-draft:${state.me.id}:${date}:${q}`;
   const setSt = (s,t) => { st.dataset.s = s; st.textContent = t; };
-  const submitted = () => { const a = answerOf(date,q); return a ? a.body : null; };
+  const submitted = () => { const a = answerOf(q); return a ? a.body : null; };
   function refresh(){
     const sub = submitted(), v = ta.value, has = v.trim().length > 0;
     if (sub === null){
@@ -829,44 +857,219 @@ function bindAuthorCard(card, q, date){
     btn.disabled = true; btn.textContent = "در حال ثبت…";
     try {
       await api.saveAnswer(date,q,v);
-      const d = state.data[date];
-      d.answers = d.answers.filter(a => !(a.q===q && a.user_id===state.me.id));
-      if (v.trim()) d.answers.push({date,q,user_id:state.me.id,body:v,updated_at:new Date().toISOString()});
+      const e = state.entry;
+      e.answers = e.answers.filter(a => !(a.q===q && a.user_id===state.me.id));
+      if (v.trim()) e.answers.push({date,q,user_id:state.me.id,body:v,updated_at:new Date().toISOString()});
       else ta.value = "";
-      lsSet(key,null);
-      renderComments(date,q); updateProg(date); autoGrow(ta); refresh();
+      lsSet(key,null); state.dates.add(date);
+      renderComments(q); updateSummary(); autoGrow(ta); refresh();
       toast(v.trim() ? "جواب ثبت شد" : "جواب حذف شد");
     } catch { toast("ثبت نشد. اتصال را بررسی کن."); refresh(); }
   };
 }
-function flushAll(){}
 
-/* refresh feedback (and, for reviewers, answers) of the two newest days */
-async function refreshRecent(){
-  if (!state.me) return;
-  for (const date of state.days.slice(0,2)){
-    if (!state.data[date]) continue;
-    try {
-      const fresh = await api.loadEntry(date);
-      const cur = state.data[date];
-      cur.comments = fresh.comments;
-      if (!state.isAuthor){ cur.answers = fresh.answers; cur.marketing = fresh.marketing; }
-      qsFor(date).forEach(qo => {
-        if (!state.isAuthor) renderAnswerView(date,qo.id);
-        renderComments(date,qo.id);
-      });
-      if (!state.isAuthor) renderMarketing(date);
-      renderComments(date,0);
-      updateProg(date);
-    } catch {}
+/* ---- compact lists: marketing, support ---- */
+const draftKey = sec => `tj-mk:${state.me.id}:${state.date}:${sec.kind}`;
+function secDrafts(sec){
+  if (!drafts[sec.kind]){
+    let saved = []; try { saved = JSON.parse(lsGet(draftKey(sec)) || "[]"); } catch {}
+    drafts[sec.kind] = (Array.isArray(saved) ? saved : []).filter(x => x && typeof x === "object")
+      .map(x => ({k:++seq,name:String(x.name || ""),notes:String(x.notes || ""),editId:null,busy:false}));
   }
+  return drafts[sec.kind];
+}
+function persistDrafts(sec){
+  const l = secDrafts(sec).filter(d => d.editId === null && (d.name || d.notes)).map(d => ({name:d.name,notes:d.notes}));
+  lsSet(draftKey(sec), l.length ? JSON.stringify(l) : null);
+}
+const rowHTML = it => `<div class="row-item" data-id="${esc(it.id)}">
+    <div class="main"><div class="nm">${esc(it.name)}</div>${it.notes ? `<div class="nt">${esc(it.notes)}</div>` : ""}</div>
+    ${state.isAuthor ? `<div class="acts"><button class="tinybtn r-edit" type="button" aria-label="ویرایش">${svgEdit}</button><button class="tinybtn danger r-del" type="button" aria-label="حذف">${svgTrash}</button></div>` : ""}
+  </div>`;
+const formHTML = (sec,d) => `<div class="form" data-k="${d.k}">
+    <input class="field f-name" maxlength="200" placeholder="${esc(sec.namePh)}" autocomplete="off" enterkeyhint="next">
+    <textarea class="f-notes" placeholder="${esc(sec.notesPh)}"></textarea>
+    <div class="bar"><button class="btn ghost xs f-cancel" type="button">انصراف</button><button class="btn xs f-save" type="button" disabled>ثبت</button></div>
+  </div>`;
+
+function renderSection(sec){
+  const card = cardEl(sec.thread); if (!card) return;
+  const items = itemsOf(sec.kind), dl = state.isAuthor ? secDrafts(sec) : [];
+  let html = "";
+  for (const it of items){ const ed = dl.find(x => x.editId === it.id); html += ed ? formHTML(sec,ed) : rowHTML(it); }
+  html += dl.filter(x => x.editId === null).map(d => formHTML(sec,d)).join("");
+  $(".sec-list", card).innerHTML = html || `<div class="sec-empty">${state.isAuthor ? "هنوز موردی ثبت نشده. با + اضافه کن." : "هنوز موردی ثبت نشده است."}</div>`;
+  dl.forEach(d => {
+    const el = $(`.form[data-k="${d.k}"]`, card); if (!el) return;
+    $(".f-name", el).value = d.name;
+    const ta = $(".f-notes", el); ta.value = d.notes; autoGrow(ta, 76);
+    $(".f-save", el).disabled = !d.name.trim() || d.busy;
+  });
+  $(".sec-count", card).textContent = items.length ? `${fa(items.length)} مورد` : "";
+}
+
+function bindSection(sec, date){
+  const card = cardEl(sec.thread);
+  renderSection(sec);
+  const add = $(".add", card);
+  if (add) add.onclick = () => {
+    const d = {k:++seq,name:"",notes:"",editId:null,busy:false};
+    secDrafts(sec).push(d); renderSection(sec);
+    const el = $(`.form[data-k="${d.k}"] .f-name`, card);
+    if (el){ el.focus(); el.scrollIntoView({block:"center",behavior:"smooth"}); }
+  };
+  card.addEventListener("input", e => {
+    const form = e.target.closest(".form"); if (!form) return;
+    const d = secDrafts(sec).find(x => String(x.k) === form.dataset.k); if (!d) return;
+    if (e.target.classList.contains("f-name")) d.name = e.target.value;
+    else if (e.target.classList.contains("f-notes")){ d.notes = e.target.value; autoGrow(e.target, 76); }
+    $(".f-save", form).disabled = !d.name.trim() || d.busy;
+    if (d.editId === null) persistDrafts(sec);
+  });
+  card.addEventListener("click", async e => {
+    const b = e.target.closest("button"); if (!b) return;
+    const form = b.closest(".form"), row = b.closest(".row-item"), dl = state.isAuthor ? secDrafts(sec) : [];
+    if (b.classList.contains("f-cancel") && form){
+      const i = dl.findIndex(x => String(x.k) === form.dataset.k);
+      if (i >= 0) dl.splice(i,1);
+      persistDrafts(sec); renderSection(sec); return;
+    }
+    if (b.classList.contains("f-save") && form){
+      const d = dl.find(x => String(x.k) === form.dataset.k); if (!d || !d.name.trim() || d.busy) return;
+      d.busy = true; b.disabled = true; b.textContent = "در حال ثبت…";
+      try {
+        const it = await api.saveItem(date,{id:d.editId,kind:sec.kind,name:d.name.trim(),notes:d.notes.trim()});
+        const en = state.entry;
+        en.items = (en.items || []).filter(x => x.id !== it.id); en.items.push(it);
+        en.items.sort((a,c) => String(a.created_at).localeCompare(String(c.created_at)));
+        dl.splice(dl.indexOf(d),1); persistDrafts(sec); state.dates.add(date);
+        renderSection(sec); renderComments(sec.thread); updateSummary(); toast("ثبت شد");
+      } catch (err) {
+        d.busy = false;
+        toast(err && err.message === "update needed" ? "ابتدا فایل SQL را در Supabase اجرا کن." : "ثبت نشد. اتصال را بررسی کن.");
+        renderSection(sec);
+      }
+      return;
+    }
+    if (b.classList.contains("r-edit") && row){
+      const it = itemsOf(sec.kind).find(x => x.id === row.dataset.id); if (!it) return;
+      const d = {k:++seq,name:it.name,notes:it.notes || "",editId:it.id,busy:false};
+      dl.push(d); renderSection(sec);
+      const el = $(`.form[data-k="${d.k}"] .f-name`, card); if (el) el.focus();
+      return;
+    }
+    if (b.classList.contains("r-del") && row){
+      if (!confirm("این مورد حذف شود؟")) return;
+      try {
+        await api.deleteItem(row.dataset.id);
+        state.entry.items = state.entry.items.filter(x => x.id !== row.dataset.id);
+        renderSection(sec); renderComments(sec.thread); updateSummary(); toast("حذف شد");
+      } catch { toast("حذف نشد."); }
+    }
+  });
+}
+
+/* ---- short feedback (under each question and each list) ---- */
+function renderComments(t){
+  const card = cardEl(t); if (!card) return;
+  const list = (state.entry.comments || []).filter(c => c.q === t);
+  $(".ch", card).textContent = list.length ? `فیدبک‌ها (${fa(list.length)})` : "فیدبک‌ها";
+  $(".clist", card).innerHTML = list.map(c => {
+    const m = memberOf(c.user_id) || {id:c.user_id,name:"؟"};
+    return `<div class="comment">${avatar(m,"sm")}<div class="bubble">
+      <div class="meta"><b>${esc(m.name)}</b><span>${esc(F.time.format(new Date(c.created_at)))}</span>
+      ${c.user_id===state.me.id ? `<button class="del" data-id="${esc(c.id)}">حذف</button>` : ""}</div>
+      <div class="txt">${esc(c.body)}</div></div></div>`;
+  }).join("");
+  $(".cform", card).hidden = !hasContent(t);   // feedback only makes sense under existing content
+}
+
+function bindComments(t, date){
+  const card = cardEl(t), form = $(".cform", card), input = $(".field", form), btn = $(".send", form), cc = $(".ccount", card);
+  input.addEventListener("input", () => {
+    btn.disabled = !input.value.trim();
+    cc.textContent = input.value.length ? `${fa(input.value.length)} / ${fa(MAX_COMMENT)}` : "";
+  });
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const body = input.value.trim(); if (!body) return;
+    btn.disabled = true;
+    try {
+      const c = await api.addComment(date,t,body);
+      state.entry.comments.push(c); input.value = ""; cc.textContent = ""; renderComments(t);
+    } catch { toast("ارسال نشد. دوباره تلاش کن."); btn.disabled = false; }
+  };
+  $(".clist", card).onclick = async e => {
+    const b = e.target.closest(".del"); if (!b) return;
+    try {
+      await api.deleteComment(b.dataset.id);
+      state.entry.comments = state.entry.comments.filter(c => String(c.id) !== b.dataset.id);
+      renderComments(t);
+    } catch { toast("حذف نشد."); }
+  };
+}
+
+/* refresh feedback (and, for reviewers, the author's content) of the day being viewed */
+async function refreshCurrent(){
+  if (!state.me || !state.entry) return;
+  const date = state.date;
+  try {
+    const fresh = await api.loadEntry(date);
+    if (state.date !== date) return;
+    const cur = state.entry;
+    cur.comments = fresh.comments;
+    if (!state.isAuthor){ cur.answers = fresh.answers; cur.items = fresh.items; }
+    state.qIds.forEach(id => { if (!state.isAuthor) renderAnswerView(id); renderComments(id); });
+    SECTIONS.forEach(sec => { if (!state.isAuthor) renderSection(sec); renderComments(sec.thread); });
+    updateSummary();
+  } catch {}
 }
 document.addEventListener("visibilitychange", () => {
-  if (document.hidden){ flushAll(); return; }
-  if (!state.me) return;
-  if (todayISO() !== renderedToday) showHome(); else refreshRecent();
+  if (document.hidden || !state.me) return;
+  if (LIVE && idleExpired()){ signOut(); return; }
+  if (todayISO() !== renderedToday){ renderedToday = todayISO(); showDay(parseRoute()); } else refreshCurrent();
 });
-addEventListener("pagehide", flushAll);
+
+/* ---- calendar (Persian), opened from the date at the top ---- */
+const WD = ["ش","ی","د","س","چ","پ","ج"];   // the Persian week starts on Saturday
+function openCalendar(){
+  const sel = state.date, cur = jparts(parseISO(sel)), tp = jparts(new Date()), tIdx = tp.y*12 + tp.m;
+  let vy = cur.y, vm = cur.m;
+  const ov = document.createElement("div"); ov.className = "overlay";
+  const sh = document.createElement("div"); sh.className = "sheet"; sh.setAttribute("role","dialog"); sh.setAttribute("aria-label","تقویم");
+  document.body.append(ov, sh);
+  requestAnimationFrame(() => { ov.classList.add("open"); sh.classList.add("open"); });
+  let closed = false;
+  const close = () => { closed = true; ov.classList.remove("open"); sh.classList.remove("open"); setTimeout(() => { ov.remove(); sh.remove(); }, 400); };
+  ov.onclick = close;
+  function draw(){
+    const first = jmFirst(vy,vm), len = jmLen(vy,vm), off = (first.getDay() + 1) % 7, today = todayISO();
+    let cells = "";
+    for (let i = 0; i < off; i++) cells += "<span></span>";
+    for (let d = 1; d <= len; d++){
+      const g = new Date(first); g.setDate(first.getDate() + d - 1);
+      const ds = iso(g), cls = ["cal-day"];
+      if (ds === sel) cls.push("sel");
+      if (ds === today) cls.push("today");
+      cells += `<button type="button" class="${cls.join(" ")}" data-d="${ds}" ${ds > today ? "disabled" : ""}>${fy(d)}${state.dates.has(ds) ? `<i class="dot"></i>` : ""}</button>`;
+    }
+    sh.innerHTML = `<div class="grab"></div>
+      <div class="cal-head">
+        <button class="iconbtn" id="cpm" type="button" aria-label="ماه قبل">${svgPrev}</button>
+        <div class="cal-title">${esc(F.month.format(first))} ${fy(vy)}</div>
+        <button class="iconbtn" id="cnm" type="button" aria-label="ماه بعد" ${vy*12 + vm >= tIdx ? "disabled" : ""}>${svgNext}</button>
+      </div>
+      <div class="cal-grid">${WD.map(w => `<div class="cal-wd">${w}</div>`).join("")}${cells}</div>
+      <div class="cal-foot"><button class="btn ghost" id="ctoday" type="button">امروز</button><button class="btn ghost" id="cclose" type="button">بستن</button></div>`;
+    $("#cpm", sh).onclick = () => { if (vm === 1){ vm = 12; vy--; } else vm--; draw(); };
+    $("#cnm", sh).onclick = () => { if (vm === 12){ vm = 1; vy++; } else vm++; draw(); };
+    $("#cclose", sh).onclick = close;
+    $("#ctoday", sh).onclick = () => { close(); go(todayISO()); };
+    sh.querySelectorAll(".cal-day").forEach(b => b.onclick = () => { close(); go(b.dataset.d); });
+  }
+  draw();
+  refreshDates().then(() => { if (!closed) draw(); });
+}
 
 /* ---- settings sheet ---- */
 function openSheet(){
@@ -896,10 +1099,10 @@ function openSheet(){
     };
   } else {
     sh.querySelectorAll(".pick").forEach(b => b.onclick = () => {
-      flushAll(); api.switchUser(b.dataset.u); close();
+      api.switchUser(b.dataset.u); close();
       setTimeout(() => {
         state.me = memberOf(b.dataset.u); state.user = {id:b.dataset.u};
-        state.isAuthor = state.me.role === "author"; showHome();
+        state.isAuthor = state.me.role === "author"; renderShell(); showDay(state.date);
       }, 250);
     });
   }
@@ -909,8 +1112,10 @@ function openSheet(){
 (async function boot(){
   try {
     api = LIVE ? await createLiveApi() : createDemoApi();
-    const user = await api.getSession();
+    let user = await api.getSession();
+    if (user && LIVE && idleExpired()){ await api.signOut(); user = null; }
     if (!user) return loginView();
+    touch();
     await enter(user);
   } catch (e) {
     console.error(e);
