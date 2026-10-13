@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>ژورنال تیم</title>
@@ -526,20 +528,10 @@ async function createLiveApi(){
   /* remove a login that an older version of this page saved permanently on this device */
   try { Object.keys(localStorage).filter(k => /^sb-.*-auth-token/.test(k)).forEach(k => localStorage.removeItem(k)); } catch {}
 
-  /* Each browser gets a secret random id (kept on this device) and sends it with every request.
-     The database shows data only to devices the author has approved. */
-  let deviceId = null;
-  try { deviceId = localStorage.getItem("tj-device"); } catch {}
-  if (!deviceId || !/^[0-9a-f-]{36}$/.test(deviceId)){
-    deviceId = (crypto.randomUUID ? crypto.randomUUID() :
-      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => { const r = Math.random()*16|0; return (c === "x" ? r : (r&3|8)).toString(16); }));
-    try { localStorage.setItem("tj-device", deviceId); } catch {}
-  }
   const sb = createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, {
-    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storage:store},
-    global:{headers:{"x-device-id":deviceId}}
+    auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storage:store}
   });
-  let teamId = null, uid = null, needsUpdate = false, gate = true;
+  let teamId = null, uid = null, needsUpdate = false;
   async function pageAll(build){
     let out = [], from = 0;
     for (;;){
@@ -570,21 +562,6 @@ async function createLiveApi(){
   return {
     mode:"live",
     get needsUpdate(){ return needsUpdate; },
-    get gate(){ return gate; },
-    get deviceId(){ return deviceId; },
-    async registerDevice(label){
-      const { data, error } = await sb.rpc("register_device", {p_id:deviceId, p_label:label});
-      if (error){
-        const m = (error.message || "") + " " + (error.code || "");
-        if (/not a member/i.test(m)) return "nomember";
-        if (/PGRST202|could not find the function|schema cache/i.test(m)){ gate = false; return "approved"; }   // database not updated to the device lock yet
-        throw error;
-      }
-      return data;
-    },
-    async listDevices(){ const { data, error } = await sb.rpc("list_devices"); if (error) throw error; return data || []; },
-    async setDeviceApproved(id, ok){ const { error } = await sb.rpc("set_device_approved", {p_id:id, p_ok:ok}); if (error) throw error; },
-    async removeDevice(id){ const { error } = await sb.rpc("remove_device", {p_id:id}); if (error) throw error; },
     async searchItems(){
       const [ents, its] = await Promise.all([
         pageAll(() => sb.from("entries").select("id,entry_date").order("id")), pageItems()]);
@@ -691,7 +668,7 @@ async function createLiveApi(){
    APP
    ===================================================================== */
 let api;
-const state = {user:null,members:[],me:null,author:null,isAuthor:false,date:null,entry:null,qIds:[],dates:new Set(),pending:0,all:null};
+const state = {user:null,members:[],me:null,author:null,isAuthor:false,date:null,entry:null,qIds:[],dates:new Set(),all:null};
 let pollTimer = null, renderedToday = todayISO(), drafts = {}, seq = 0;
 const app = $("#app");
 const memberOf = id => state.members.find(m => m.id === id);
@@ -762,37 +739,9 @@ function noAccessView(){
   $("#so").onclick = signOut;
 }
 
-function deviceLabel(){
-  const u = navigator.userAgent || "";
-  const os = /Android/i.test(u) ? "Android" : /iPhone|iPad|iPod/i.test(u) ? "iPhone" : /Windows/i.test(u) ? "Windows" : /Mac/i.test(u) ? "Mac" : /Linux/i.test(u) ? "Linux" : "دستگاه";
-  const br = /Edg\//i.test(u) ? "Edge" : /SamsungBrowser/i.test(u) ? "Samsung" : /Firefox|FxiOS/i.test(u) ? "Firefox" : /Chrome|CriOS/i.test(u) ? "Chrome" : /Safari/i.test(u) ? "Safari" : "";
-  return (os + (br ? " · " + br : "")).slice(0,60);
-}
-function pendingView(user,label){
-  app.innerHTML = `<div class="center"><div class="card login reveal">
-    <h1>در انتظار تأیید</h1>
-    <p>این دستگاه (${esc(label)}) هنوز تأیید نشده است. از صاحب ژورنال بخواه آن را تأیید کند:<br>تنظیمات ← دستگاه‌های مجاز.</p>
-    <button class="btn block" id="re">بررسی دوباره</button>
-    <div style="height:8px"></div><button class="btn block ghost" id="so">خروج</button></div></div>`;
-  let busy = false;
-  const check = async () => {
-    if (busy) return; busy = true;
-    try { if (await api.registerDevice(label) === "approved"){ clearInterval(t); await enter(user); return; } toast("هنوز تأیید نشده."); }
-    catch {} finally { busy = false; }
-  };
-  const t = setInterval(() => { if (!document.hidden && $("#re")) check(); else if (!$("#re")) clearInterval(t); }, 8000);
-  $("#re").onclick = check;
-  $("#so").onclick = () => { clearInterval(t); signOut(); };
-}
-
 async function enter(user){
   app.innerHTML = loadingHTML();
   state.user = user;
-  if (api.mode === "live"){
-    const label = deviceLabel(), st = await api.registerDevice(label);
-    if (st === "nomember") return noAccessView();
-    if (st === "pending") return pendingView(user,label);
-  }
   state.members = await api.members();
   state.me = memberOf(user.id);
   if (!state.me) return noAccessView();
@@ -800,7 +749,6 @@ async function enter(user){
   state.isAuthor = state.me.role === "author";
   renderShell();
   refreshDates();
-  refreshDevices();
   showDay(parseRoute());
 }
 
@@ -818,10 +766,6 @@ function renderShell(){
 async function refreshDates(){
   try { state.dates = new Set((await api.listDays()).map(d => d.date)); renderNotice(); } catch {}
 }
-async function refreshDevices(){
-  if (api.mode !== "live" || !api.gate || !state.isAuthor) return;
-  try { state.pending = (await api.listDevices()).filter(d => !d.approved).length; renderNotice(); } catch {}
-}
 const BK_DAYS = 30;
 function backupDue(){
   if (api.mode !== "live" || !state.isAuthor || !state.dates.size) return false;
@@ -833,10 +777,8 @@ function renderNotice(){
   const el = $("#notice"); if (!el) return;
   let h = "";
   if (api.needsUpdate) h += `<div class="banner">بخش پشتیبانی هنوز در دیتابیس فعال نشده است. فایل supabase-update-3.sql را در Supabase اجرا کن.</div>`;
-  if (state.isAuthor && state.pending > 0) h += `<div class="banner">${fa(state.pending)} دستگاه منتظر تأیید توست. <button class="lnk" id="nDev" type="button">مشاهده</button></div>`;
   if (backupDue()) h += `<div class="banner">بیش از یک ماه است پشتیبان نگرفته‌ای. <button class="lnk" id="nBk" type="button">دانلود الان</button></div>`;
   el.innerHTML = h;
-  const d = $("#nDev"); if (d) d.onclick = openDevices;
   const b = $("#nBk"); if (b) b.onclick = () => doBackup("json");
 }
 
@@ -1178,7 +1120,6 @@ async function refreshCurrent(){
     SECTIONS.forEach(sec => { if (!state.isAuthor) renderSection(sec); renderComments(sec.thread); });
     updateSummary();
   } catch {}
-  refreshDevices();
 }
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !state.me) return;
@@ -1280,42 +1221,6 @@ async function openSearch(){
   } catch (e) { console.error(e); if (!all) info.textContent = "خواندن اطلاعات ممکن نشد. اتصال را بررسی کن."; }
 }
 
-/* ---- trusted devices (author) ---- */
-async function openDevices(){
-  const {sh, close} = makeSheet();
-  sh.innerHTML = `<div class="grab"></div><h3>دستگاه‌های مجاز</h3>
-    <div class="sub">فقط دستگاه‌های تأییدشده می‌توانند اطلاعات را ببینند. دستگاه جدید بعد از ورود «در انتظار» می‌ماند تا تو تأیید کنی.</div>
-    <div id="dl">${loadingHTML()}</div><div class="row"><button class="btn block ghost" id="dc">بستن</button></div>`;
-  $("#dc", sh).onclick = close;
-  const box = $("#dl", sh);
-  async function draw(){
-    let list;
-    try { list = await api.listDevices(); } catch { box.innerHTML = `<div class="sub">خواندن لیست ممکن نشد.</div>`; return; }
-    state.pending = list.filter(d => !d.approved).length; renderNotice();
-    const byUser = new Map();
-    list.forEach(d => { if (!byUser.has(d.user_id)) byUser.set(d.user_id, {name:d.member_name, items:[]}); byUser.get(d.user_id).items.push(d); });
-    box.innerHTML = [...byUser.values()].map(g => `<div class="dvh">${esc(g.name)}</div>` + g.items.map(d => {
-      const me = d.id === api.deviceId, seen = new Date(d.last_seen);
-      return `<div class="dv" data-id="${esc(d.id)}"><div class="t"><span>${esc(d.label || "دستگاه")}</span>
-        <span class="st ${d.approved ? "ok" : "wait"}">${d.approved ? "تأییدشده" : "در انتظار"}</span>${me ? `<span class="st">این دستگاه</span>` : ""}</div>
-        <div class="m">آخرین استفاده: ${esc(dayMonth(iso(seen)))} ${esc(F.time.format(seen))}</div>
-        ${me ? "" : `<div class="bar">${d.approved ? `<button class="btn xs ghost d-block" type="button">مسدود کن</button>` : `<button class="btn xs d-ok" type="button">تأیید</button>`}<button class="btn xs danger d-del" type="button">حذف</button></div>`}</div>`;
-    }).join("")).join("") || `<div class="sub">دستگاهی ثبت نشده.</div>`;
-  }
-  box.onclick = async e => {
-    const b = e.target.closest("button"), row = e.target.closest(".dv"); if (!b || !row) return;
-    const id = row.dataset.id;
-    try {
-      if (b.classList.contains("d-ok")) await api.setDeviceApproved(id, true);
-      else if (b.classList.contains("d-block")) await api.setDeviceApproved(id, false);
-      else if (b.classList.contains("d-del")){ if (!confirm("این دستگاه حذف شود؟")) return; await api.removeDevice(id); }
-      else return;
-      toast("انجام شد"); draw();
-    } catch { toast("انجام نشد."); }
-  };
-  draw();
-}
-
 /* ---- backup: a file with everything, saved on your phone / computer ---- */
 function download(name, text, type){
   const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([text], {type}));
@@ -1351,8 +1256,7 @@ function openSheet(){
     ${live && state.isAuthor ? `
       <div class="row"><button class="btn block ghost" id="bkj">دانلود پشتیبان کامل</button></div>
       <div class="row"><button class="btn block ghost" id="bkc">دانلود لیست‌ها برای اکسل</button></div>
-      <div class="sub" id="bkl">${lsGet("tj-backup-last") ? "آخرین پشتیبان: " + esc(dayMonth(iso(new Date(Number(lsGet("tj-backup-last")))))) : "هنوز پشتیبان نگرفته‌ای."}</div>
-      ${api.gate ? `<div class="row"><button class="btn block ghost" id="dv">دستگاه‌های مجاز${state.pending ? ` (${fa(state.pending)} در انتظار)` : ""}</button></div>` : ""}` : ""}
+      <div class="sub" id="bkl">${lsGet("tj-backup-last") ? "آخرین پشتیبان: " + esc(dayMonth(iso(new Date(Number(lsGet("tj-backup-last")))))) : "هنوز پشتیبان نگرفته‌ای."}</div>` : ""}
     ${live ? `
       <div class="row"><input class="field ltr" id="np" type="password" autocomplete="new-password" placeholder="رمز جدید (حداقل ۸ نویسه)"></div>
       <div class="row"><button class="btn block ghost" id="cp">تغییر رمز عبور</button></div>
@@ -1368,7 +1272,6 @@ function openSheet(){
     if (state.isAuthor){
       $("#bkj", sh).onclick = () => doBackup("json");
       $("#bkc", sh).onclick = () => doBackup("csv");
-      const dv = $("#dv", sh); if (dv) dv.onclick = () => { close(); setTimeout(openDevices, 250); };
     }
     $("#so2", sh).onclick = signOut;
     $("#cp", sh).onclick = async () => {
