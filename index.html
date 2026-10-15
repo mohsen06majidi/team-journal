@@ -9,6 +9,7 @@
 <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>ژورنال تیم</title>
+<script>try{var t=localStorage.getItem("tj-theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -18,25 +19,43 @@
   --bg:#f5f5f7; --card:#ffffff; --field:#f2f2f4;
   --text:#111113; --muted:#5c5c63; --faint:#9a9aa1;
   --line:rgba(0,0,0,.1);
-  --accent:#0071e3; --accent-soft:rgba(0,113,227,.12);
+  --accent:#0071e3; --accent-ink:#0071e3; --accent-soft:rgba(0,113,227,.12);
   --ok:#1f7a38; --danger:#d70015;
   --radius:20px; --radius-sm:14px;
   --shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px rgba(0,0,0,.06);
   --blur-bg:rgba(245,245,247,.75);
+  --glow:none;
   --c1:#0071e3; --c2:#a550d6; --c3:#1f7a38;
 }
+/* dark = empty space: true black page, thin-framed panels floating on it */
 @media (prefers-color-scheme:dark){
-  :root{
-    --bg:#000000; --card:#1c1c1e; --field:#2c2c2e;
-    --text:#f7f7f9; --muted:#a8a8b0; --faint:#6a6a72;
-    --line:rgba(255,255,255,.12);
-    --accent:#2997ff; --accent-soft:rgba(41,151,255,.18);
-    --ok:#32d74b; --danger:#ff453a;
-    --shadow:0 1px 2px rgba(0,0,0,.3);
-    --blur-bg:rgba(0,0,0,.75);
-    --c1:#2997ff; --c2:#bf5af2; --c3:#32d74b;
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#000000; --card:#0b0b0d; --field:#161619;
+    --text:#ececf0; --muted:#9a9aa3; --faint:#5b5b64;
+    --line:rgba(255,255,255,.08);
+    --accent:#2f7df6; --accent-ink:#79b6ff; --accent-soft:rgba(80,150,255,.15);
+    --ok:#3ddc6a; --danger:#ff5a50;
+    --shadow:0 0 0 1px rgba(255,255,255,.075),inset 0 1px 0 rgba(255,255,255,.04);
+    --blur-bg:rgba(0,0,0,.72);
+    --glow:radial-gradient(70% 38% at 50% -8%,rgba(96,120,255,.13),transparent 70%);
+    --c1:#5aa9ff; --c2:#c07cf5; --c3:#45d884;
   }
 }
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#000000; --card:#0b0b0d; --field:#161619;
+  --text:#ececf0; --muted:#9a9aa3; --faint:#5b5b64;
+  --line:rgba(255,255,255,.08);
+  --accent:#2f7df6; --accent-ink:#79b6ff; --accent-soft:rgba(80,150,255,.15);
+  --ok:#3ddc6a; --danger:#ff5a50;
+  --shadow:0 0 0 1px rgba(255,255,255,.075),inset 0 1px 0 rgba(255,255,255,.04);
+  --blur-bg:rgba(0,0,0,.72);
+  --glow:radial-gradient(70% 38% at 50% -8%,rgba(96,120,255,.13),transparent 70%);
+  --c1:#5aa9ff; --c2:#c07cf5; --c3:#45d884;
+}
+:root[data-theme="light"]{color-scheme:light}
+body::before{content:"";position:fixed;inset:0;background:var(--glow);pointer-events:none;z-index:-1}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%}
 [hidden]{display:none!important}
@@ -69,7 +88,7 @@ button{cursor:pointer;border:0;background:none}
 }
 .avatar.sm{width:26px;height:26px;font-size:12px}
 .banner{
-  background:var(--accent-soft);color:var(--accent);border-radius:var(--radius-sm);
+  background:var(--accent-soft);color:var(--accent-ink);border-radius:var(--radius-sm);
   padding:9px 14px;font-size:13px;font-weight:600;line-height:1.7;margin:6px 0;
 }
 
@@ -106,7 +125,7 @@ button{cursor:pointer;border:0;background:none}
 .q-head{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
 .q-num{
   flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
-  background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:13px;margin-top:2px;
+  background:var(--accent-soft);color:var(--accent-ink);font-weight:800;font-size:13px;margin-top:2px;
 }
 .q-head h2{margin:0;font-size:16.5px;font-weight:800;line-height:1.65}
 .label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin:0 4px 5px}
@@ -135,7 +154,7 @@ textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 .sec-count{color:var(--muted);font-size:12px;font-weight:700;flex:1}
 .add{
   display:flex;align-items:center;justify-content:center;gap:6px;width:100%;height:34px;margin-top:6px;
-  border-radius:12px;background:var(--accent-soft);color:var(--accent);font-size:13.5px;font-weight:800;transition:transform .15s;
+  border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);font-size:13.5px;font-weight:800;transition:transform .15s;
 }
 .add svg{width:16px;height:16px}
 .add:active{transform:scale(.98)}
@@ -207,7 +226,7 @@ textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 .sg small{color:var(--muted);font-weight:700;font-size:12px}
 .sr{display:block;width:100%;text-align:start;background:var(--field);border-radius:12px;padding:6px 12px;margin:3px 0}
 .sr .d{display:flex;gap:8px;align-items:center;font-size:12.5px;font-weight:800}
-.sr .tag{font-size:11px;font-weight:700;color:var(--accent);background:var(--accent-soft);border-radius:99px;padding:0 8px}
+.sr .tag{font-size:11px;font-weight:700;color:var(--accent-ink);background:var(--accent-soft);border-radius:99px;padding:0 8px}
 .sr .tag.sp{color:var(--c2);background:color-mix(in srgb,var(--c2) 14%,transparent)}
 .sr .n{color:var(--muted);font-size:12.5px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:500}
 .sheet.tall{height:88dvh}
@@ -276,6 +295,58 @@ textarea:focus,.field:focus{outline:none;box-shadow:0 0 0 3px var(--accent-soft)
 .dots span{display:inline-block;width:8px;height:8px;margin:0 3px;border-radius:50%;background:var(--faint);animation:pulse 1s infinite ease-in-out}
 .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
 @keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+.sheet{border-top:1px solid var(--line)}
+.bell{position:relative}
+.badge{position:absolute;top:-5px;left:-5px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:var(--danger);color:#fff;font-size:10.5px;font-weight:800;line-height:17px;text-align:center;box-shadow:0 0 0 2px var(--bg)}
+.comments{padding-top:3px;margin-top:8px}
+.sec .comments{padding-top:2px;margin-top:4px}
+.ctoggle{display:flex;align-items:center;gap:6px;width:100%;padding:4px 2px;color:var(--muted);font-size:12.5px;font-weight:700}
+.ctoggle svg{width:15px;height:15px;flex:none}
+.ctoggle .ch{flex:1;text-align:start}
+.ctoggle .cv{display:grid;transition:transform .2s}
+.comments.open .cv{transform:rotate(180deg)}
+.cbody{padding-top:2px}
+.nf{display:block;width:100%;text-align:start;padding:8px 12px;border-radius:14px;background:var(--field);margin:5px 0}
+.nf .top{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800}
+.nf .top small{color:var(--muted);font-weight:600;margin-inline-start:auto;font-size:11.5px}
+.nf .nd{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.nf .nd.off{background:transparent}
+.nf .wh{color:var(--muted);font-size:11.5px;font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nf .tx{font-size:14px;line-height:1.7;margin-top:2px;white-space:pre-wrap;word-break:break-word}
+.seg{display:flex;background:var(--field);border-radius:12px;padding:3px;gap:2px;margin:4px 0 10px}
+.seg button{flex:1;padding:5px 0;border-radius:9px;font-size:13px;font-weight:700;color:var(--muted)}
+.seg button.on{background:var(--text);color:var(--bg)}
+
+body{padding-bottom:max(92px,calc(78px + env(safe-area-inset-bottom)))}
+.toast{bottom:max(96px,calc(84px + env(safe-area-inset-bottom)))}
+.tabbar{position:fixed;inset-inline:0;bottom:0;z-index:30;display:flex;justify-content:center;padding:0 14px max(10px,env(safe-area-inset-bottom));pointer-events:none}
+.tabbar .in{pointer-events:auto;display:flex;gap:4px;width:100%;max-width:400px;padding:5px;border-radius:24px;background:var(--blur-bg);-webkit-backdrop-filter:saturate(180%) blur(22px);backdrop-filter:saturate(180%) blur(22px);box-shadow:var(--shadow),0 8px 28px rgba(0,0,0,.14)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 0 5px;border-radius:19px;color:var(--muted);font-size:11.5px;font-weight:700;text-decoration:none;transition:background .2s,color .2s}
+.tab svg{width:21px;height:21px}
+.tab.on{background:var(--accent-soft);color:var(--accent-ink)}
+.whobar{display:flex;align-items:center;gap:10px;margin:6px 4px 0}
+.whobar b{display:block;font-size:14.5px;line-height:1.4}
+.whobar small{color:var(--muted);font-size:12px;font-weight:600}
+.pagehead{margin:12px 4px 10px}
+.pagehead h2{margin:0;font-size:22px;font-weight:900}
+.pagehead .sub2{color:var(--muted);font-size:13px;font-weight:600}
+.colleague{display:flex;align-items:center;gap:12px;padding:12px 14px;color:inherit;text-decoration:none}
+.colleague .avatar{width:44px;height:44px;font-size:18px}
+.colleague .cn{flex:1;min-width:0}
+.colleague .cn b{display:block;font-size:15.5px;line-height:1.5}
+.colleague small{color:var(--muted);font-size:12.5px;font-weight:600}
+.colleague .go{color:var(--faint)}
+.colleague .go svg{width:18px;height:18px}
+.linkdel{color:var(--danger);font-size:12px;font-weight:700;padding:4px 2px;margin-top:2px}
+.cact{margin-inline-start:auto;display:flex;gap:4px}
+.cact button{font-size:12px;font-weight:600;color:var(--muted);padding:2px 4px}
+.cact .del{margin:0}
+.edrow{display:flex;gap:6px;align-items:center}
+.edrow .field{padding:6px 12px}
+.help{margin:8px 4px;color:var(--muted);font-size:12.5px;line-height:1.8}
+.help summary{cursor:pointer;font-weight:700}
+.help ol{margin:4px 0;padding-inline-start:20px}
 </style>
 </head>
 <body>
@@ -321,7 +392,7 @@ const SECTIONS = [
 const MAX_COMMENT = 280;            // short feedback only (the database allows up to 500)
 const IDLE_MS = 30 * 60 * 1000;     // sign out after 30 minutes without activity
 const COLORS = ["var(--c1)","var(--c2)","var(--c3)"];
-const ROLE_FA = { author:"نویسنده", reviewer:"بازخورددهنده" };
+const ROLE_FA = { admin:"مدیر", member:"عضو" };
 
 /* ---------- helpers ---------- */
 const $ = (s, r=document) => r.querySelector(s);
@@ -351,6 +422,11 @@ const svgPrev  = ico(`<path d="M9 6l6 6-6 6"/>`);        // points right: "previ
 const svgNext  = ico(`<path d="M15 6l-6 6 6 6"/>`);      // points left:  "next"
 const svgCal   = ico(`<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>`);
 const svgEdit  = ico(`<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>`);
+const svgHome = ico(`<path d="M4 11l8-7 8 7"/><path d="M6 10v10h12V10"/>`);
+const svgPeople = ico(`<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><path d="M16 5.2a3.2 3.2 0 010 5.6M18 14.4c1.8.7 3 2.6 3 5.6"/>`);
+const svgBell = ico(`<path d="M6 8a6 6 0 0112 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 004 0"/>`);
+const svgChat = ico(`<path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.4A8 8 0 1121 12z"/>`);
+const svgChev = ico(`<path d="M6 9l6 6 6-6"/>`);
 const svgSearch = ico(`<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>`);
 const svgTrash = ico(`<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M6 6l1 14h10l1-14"/>`);
 const normQs = raw => {          // the question list saved with a day (old format: plain strings)
@@ -423,90 +499,124 @@ const POOL_SP = [
 ];
 /* by days ago: [Q1 answered?, marketing count, support count]. Day 3 is left completely empty on purpose. */
 const PLAN = {0:[1,2,2],1:[1,3,1],2:[1,1,0],4:[1,2,2],5:[0,1,1],6:[1,2,0],7:[1,0,2],9:[1,3,1],12:[1,1,1],20:[1,2,1]};
+const PLANS = {u1:PLAN,u2:{0:[1,1,1],1:[1,2,0],3:[1,1,2],5:[1,2,1],8:[1,1,1]},u3:{0:[1,1,0],2:[1,2,1],4:[1,1,1],6:[1,0,2]}};
+/* j = who writes the feedback, r = whose report it is (indexes in the demo member list) */
 const SEED_COMMENTS = [
-  {off:0,t:1,j:1,txt:"ویدیو عالیه. فقط اگر ممکنه زیرنویس هم داشته باشه.",h:11},
-  {off:0,t:0,j:2,txt:"روی دکتر احمدی بیشتر کار کن، به نظرم نزدیک‌ترین فرصته.",h:12},
-  {off:1,t:100,j:1,txt:"ثبت این مشکل‌ها در سؤالات متداول خیلی کمک می‌کنه.",h:17},
-  {off:2,t:1,j:2,txt:"لطفاً نتیجه‌ی ویدیو رو فردا بنویس.",h:16}
+  {off:0,t:1,j:1,r:0,txt:"ویدیو عالیه. فقط اگر ممکنه زیرنویس هم داشته باشه.",h:11},
+  {off:0,t:0,j:2,r:0,txt:"روی دکتر احمدی بیشتر کار کن، به نظرم نزدیک‌ترین فرصته.",h:12},
+  {off:1,t:100,j:1,r:0,txt:"ثبت این مشکل‌ها در سؤالات متداول خیلی کمک می‌کنه.",h:17},
+  {off:2,t:1,j:2,r:0,txt:"لطفاً نتیجه‌ی ویدیو رو فردا بنویس.",h:16},
+  {off:0,t:1,j:0,r:1,txt:"ایده‌ی خوبیه، ادامه بده.",h:13},
+  {off:1,t:0,j:2,r:1,txt:"اگه بشه جلسه‌ی حضوری بذار.",h:18}
 ];
 
 function createDemoApi(){
-  const KEY = "team-journal-demo-v4";
-  const members = [
-    {id:"u1",name:"سارا",role:"author"},
-    {id:"u2",name:"امیر",role:"reviewer"},
-    {id:"u3",name:"نیلوفر",role:"reviewer"}
-  ];
+  const KEY = "team-journal-demo-v5";
   const stamp = (date,h,m=0) => { const d = parseISO(date); d.setHours(h,m,0,0); return d.toISOString(); };
+  const MEMBERS0 = [
+    {id:"u1",name:"سید محسن مجیدی",role:"admin",active:true,email:"admin@demo"},
+    {id:"u2",name:"سید جواد مجیدی",role:"member",active:true,email:"javad@demo"},
+    {id:"u3",name:"دکتر امیری",role:"member",active:true,email:"amiri@demo"}
+  ];
   function seed(){
     const t = todayISO(), answers = [], comments = [], items = [], dates = new Set([t]);
     let cid = 1;
-    for (const [off,[q,mk,sp]] of Object.entries(PLAN)){
-      const date = addDays(t,-Number(off)); dates.add(date);
-      if (q) answers.push({date,q:1,user_id:"u1",body:POOL_Q[Number(off) % POOL_Q.length],updated_at:stamp(date,10)});
-      for (let k=0;k<mk;k++){ const [n,x] = POOL_MK[(Number(off)+k*2) % POOL_MK.length]; items.push({id:`m-${off}-${k}`,date,kind:"marketing",user_id:"u1",name:n,notes:x,created_at:stamp(date,12+k)}); }
-      for (let k=0;k<sp;k++){ const [n,x] = POOL_SP[(Number(off)+k*2) % POOL_SP.length]; items.push({id:`s-${off}-${k}`,date,kind:"support",user_id:"u1",name:n,notes:x,created_at:stamp(date,15+k)}); }
-    }
+    Object.entries(PLANS).forEach(([uid,plan],ui) => {
+      for (const [off,[q,mk,sp]] of Object.entries(plan)){
+        const date = addDays(t,-Number(off)), o = Number(off) + ui*3; dates.add(date);
+        if (q) answers.push({date,q:1,user_id:uid,body:POOL_Q[o % POOL_Q.length],updated_at:stamp(date,10+ui)});
+        for (let k=0;k<mk;k++){ const [n,x] = POOL_MK[(o+k*2) % POOL_MK.length]; items.push({id:`m-${uid}-${off}-${k}`,date,kind:"marketing",user_id:uid,name:n,notes:x,created_at:stamp(date,12+k)}); }
+        for (let k=0;k<sp;k++){ const [n,x] = POOL_SP[(o+k*2) % POOL_SP.length]; items.push({id:`s-${uid}-${off}-${k}`,date,kind:"support",user_id:uid,name:n,notes:x,created_at:stamp(date,15+k)}); }
+      }
+    });
     for (const c of SEED_COMMENTS){
       const date = addDays(t,-c.off);
-      comments.push({id:"c"+(cid++),date,q:c.t,user_id:members[c.j].id,body:c.txt,created_at:stamp(date,c.h,20)});
+      comments.push({id:"c"+(cid++),date,q:c.t,user_id:MEMBERS0[c.j].id,report_user:MEMBERS0[c.r].id,body:c.txt,created_at:stamp(date,c.h,20)});
     }
-    return {meId:"u1",answers,comments,items,dates:[...dates]};
+    return {meId:"u1",members:MEMBERS0.map(m => ({...m})),answers,comments,items,dates:[...dates]};
   }
   let db = null;
   try { db = JSON.parse(localStorage.getItem(KEY)); } catch {}
-  if (!db || !Array.isArray(db.answers) || !Array.isArray(db.items)) db = seed();
+  if (!db || !Array.isArray(db.answers) || !Array.isArray(db.members)) db = seed();
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(db)); } catch {} };
   save();
-  const me = () => members.find(m => m.id === db.meId);
-  const author = () => { if (me().role !== "author") throw new Error("not author"); };
+  const me = () => db.members.find(m => m.id === db.meId);
+  const admin = () => { if (me().role !== "admin") throw new Error("admin only"); };
   const ensureDay = date => { if (!db.dates.includes(date)) db.dates.push(date); };
+  const byTime = (a,b) => a.created_at.localeCompare(b.created_at);
+  const adminsLeft = except => db.members.some(m => m.role === "admin" && m.active && m.id !== except);
   return {
     mode:"demo", needsUpdate:false,
-    async getSession(){ return {id:me().id,email:"demo@local"}; },
-    async members(){ return members.map(m => ({...m})); },
+    async getSession(){ return {id:me().id,email:me().email}; },
+    async members(){ return db.members.map(m => ({...m})); },
     switchUser(id){ db.meId = id; save(); },
-    async listDays(){ return db.dates.slice().sort().reverse().map(date => ({date})); },
-    async loadEntry(date){
-      const byTime = (a,b) => a.created_at.localeCompare(b.created_at);
+    async listDays(owner){
+      const ds = new Set([...db.answers.filter(a => a.user_id === owner), ...db.items.filter(x => x.user_id === owner)].map(x => x.date));
+      return [...ds].sort().reverse().map(date => ({date}));
+    },
+    async loadEntry(date, owner){
       return {
         exists: db.dates.includes(date),
-        answers: db.answers.filter(a=>a.date===date).map(a=>({...a})),
-        comments: db.comments.filter(c=>c.date===date).map(c=>({...c})).sort(byTime),
-        items: db.items.filter(x=>x.date===date).map(x=>({...x})).sort(byTime),
+        answers: db.answers.filter(a => a.date===date && a.user_id===owner).map(a => ({...a})),
+        comments: db.comments.filter(c => c.date===date && c.report_user===owner).map(c => ({...c})).sort(byTime),
+        items: db.items.filter(x => x.date===date && x.user_id===owner).map(x => ({...x})).sort(byTime),
         questions: null
       };
     },
     async saveAnswer(date,q,body){
-      await sleep(250); author(); ensureDay(date);
-      const i = db.answers.findIndex(a=>a.date===date&&a.q===q&&a.user_id===db.meId);
+      await sleep(250); ensureDay(date);
+      const i = db.answers.findIndex(a => a.date===date && a.q===q && a.user_id===db.meId);
       if (!body.trim()){ if (i>=0) db.answers.splice(i,1); }
       else if (i>=0){ db.answers[i].body = body; db.answers[i].updated_at = new Date().toISOString(); }
       else db.answers.push({date,q,user_id:db.meId,body,updated_at:new Date().toISOString()});
       save();
     },
-    async addComment(date,q,body){
+    async deleteAnswerOf(date,q,owner){ admin(); db.answers = db.answers.filter(a => !(a.date===date && a.q===q && a.user_id===owner)); save(); },
+    async addComment(date,q,body,reportUser){
       await sleep(150);
-      const c = {id:"c"+Date.now(),date,q,user_id:db.meId,body,created_at:new Date().toISOString()};
+      const c = {id:"c"+Date.now(),date,q,user_id:db.meId,report_user:reportUser,body,created_at:new Date().toISOString()};
       db.comments.push(c); save(); return {...c};
     },
-    async deleteComment(id){ db.comments = db.comments.filter(c=>c.id!==id); save(); },
+    async editComment(id,body){
+      const c = db.comments.find(x => x.id===id); if (!c || c.user_id !== db.meId) throw new Error("not yours");
+      c.body = body; save();
+    },
+    async deleteComment(id){
+      const c = db.comments.find(x => x.id===id); if (!c) return;
+      if (c.user_id !== db.meId && me().role !== "admin") throw new Error("not allowed");
+      db.comments = db.comments.filter(x => x.id!==id); save();
+    },
     async saveItem(date,{id,kind,name,notes}){
-      await sleep(200); author();
+      await sleep(200);
       if (id){
-        const it = db.items.find(x=>x.id===id); if (!it) throw new Error("missing");
+        const it = db.items.find(x => x.id===id); if (!it || it.user_id !== db.meId) throw new Error("not yours");
         it.name = name; it.notes = notes; save(); return {...it};
       }
       ensureDay(date);
       const it = {id:"i"+Date.now()+Math.random().toString(36).slice(2,6),date,kind,user_id:db.meId,name,notes,created_at:new Date().toISOString()};
       db.items.push(it); save(); return {...it};
     },
-    async deleteItem(id){ author(); db.items = db.items.filter(x=>x.id!==id); save(); },
-    async searchItems(){ return db.items.map(x => ({...x})); },
+    async deleteItem(id){
+      const it = db.items.find(x => x.id===id); if (!it) return;
+      if (it.user_id !== db.meId && me().role !== "admin") throw new Error("not allowed");
+      db.items = db.items.filter(x => x.id!==id); save();
+    },
+    async searchItems(owner){ return db.items.filter(x => x.user_id === owner).map(x => ({...x})); },
+    async listFeedback(){ return db.comments.map(c => ({id:c.id,date:c.date,q:c.q,user_id:c.user_id,report_user:c.report_user,body:c.body,created_at:c.created_at})); },
     async exportAll(){
-      return {members:members.map(m => ({...m})), entries:db.dates.map(date => ({date})),
+      return {members:db.members.map(m => ({id:m.id,name:m.name,role:m.role})), entries:db.dates.map(date => ({date})),
         answers:db.answers.map(a => ({...a})), comments:db.comments.map(c => ({...c})), items:db.items.map(x => ({...x}))};
     },
+    /* member management (admin) */
+    async listMembersAdmin(){ admin(); return db.members.map(m => ({user_id:m.id,email:m.email,display_name:m.name,role:m.role,active:m.active})); },
+    async addMember(email,name,role){
+      admin(); if (db.members.some(m => m.email.toLowerCase() === email.toLowerCase())) throw new Error("already a member");
+      db.members.push({id:"u"+Date.now(),name,role,active:true,email}); save();
+    },
+    async setRole(id,role){ admin(); if (role==="member" && !adminsLeft(id)) throw new Error("there must stay at least one active admin"); db.members.find(m => m.id===id).role = role; save(); },
+    async setActive(id,on){ admin(); if (!on && id===db.meId) throw new Error("you cannot switch yourself off"); db.members.find(m => m.id===id).active = on; save(); },
+    async renameMember(id,name){ admin(); db.members.find(m => m.id===id).name = name; save(); },
+    async removeMember(id){ admin(); if (id===db.meId) throw new Error("you cannot remove yourself"); db.members = db.members.filter(m => m.id!==id); save(); },
     async signOut(){}, async updatePassword(){}
   };
 }
@@ -559,28 +669,36 @@ async function createLiveApi(){
     }
     return row;
   }
+  const upd6 = e => { if (e && /report_user|active|admin_/i.test(e.message || "")) throw new Error("update 6 needed"); throw e; };
   return {
     mode:"live",
     get needsUpdate(){ return needsUpdate; },
-    async searchItems(){
+    async listFeedback(){
+      const [ents, com] = await Promise.all([
+        pageAll(() => sb.from("entries").select("id,entry_date").order("id")),
+        pageAll(() => sb.from("comments").select("id,entry_id,question_no,user_id,report_user,body,created_at").order("id"))]).catch(upd6);
+      const dm = new Map(ents.map(e => [e.id, e.entry_date]));
+      return com.filter(c => dm.has(c.entry_id)).map(c => ({id:c.id,date:dm.get(c.entry_id),q:c.question_no,user_id:c.user_id,report_user:c.report_user,body:c.body,created_at:c.created_at}));
+    },
+    async searchItems(owner){
       const [ents, its] = await Promise.all([
         pageAll(() => sb.from("entries").select("id,entry_date").order("id")), pageItems()]);
       const dm = new Map(ents.map(e => [e.id, e.entry_date]));
-      return its.filter(r => dm.has(r.entry_id)).map(r => ({id:r.id,date:dm.get(r.entry_id),kind:r.kind || "marketing",name:r.doctor_name,notes:r.notes,created_at:r.created_at}));
+      return its.filter(r => r.user_id === owner && dm.has(r.entry_id)).map(r => ({id:r.id,date:dm.get(r.entry_id),kind:r.kind || "marketing",name:r.doctor_name,notes:r.notes,created_at:r.created_at}));
     },
     async exportAll(){
       const [mem, ents, ans, com, its] = await Promise.all([
         sb.from("members").select("user_id,display_name,role"),
         pageAll(() => sb.from("entries").select("id,entry_date").order("id")),
         pageAll(() => sb.from("answers").select("entry_id,question_no,user_id,body,updated_at").order("id")),
-        pageAll(() => sb.from("comments").select("entry_id,question_no,user_id,body,created_at").order("id")),
-        pageItems()]);
+        pageAll(() => sb.from("comments").select("entry_id,question_no,user_id,report_user,body,created_at").order("id")),
+        pageItems()]).catch(upd6);
       const dm = new Map(ents.map(e => [e.id, e.entry_date]));
       return {
         members:must(mem).map(m => ({id:m.user_id,name:m.display_name,role:m.role})),
         entries:ents.map(e => ({date:e.entry_date})),
         answers:ans.map(r => ({date:dm.get(r.entry_id),q:r.question_no,user_id:r.user_id,body:r.body,updated_at:r.updated_at})),
-        comments:com.map(r => ({date:dm.get(r.entry_id),q:r.question_no,user_id:r.user_id,body:r.body,created_at:r.created_at})),
+        comments:com.map(r => ({date:dm.get(r.entry_id),q:r.question_no,user_id:r.user_id,report_user:r.report_user,body:r.body,created_at:r.created_at})),
         items:its.map(r => ({date:dm.get(r.entry_id),kind:r.kind || "marketing",user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at}))
       };
     },
@@ -597,33 +715,40 @@ async function createLiveApi(){
     async signOut(){ await sb.auth.signOut(); },
     async updatePassword(password){ const { error } = await sb.auth.updateUser({password}); if (error) throw error; },
     async members(){
-      const rows = must(await sb.from("members").select("user_id,team_id,display_name,role").order("created_at"));
+      const rows = must(await sb.from("members").select("user_id,team_id,display_name,role,active").order("created_at"));
       const mine = rows.find(r => r.user_id === uid);
       if (mine) teamId = mine.team_id;
-      return rows.map(r => ({id:r.user_id,name:r.display_name,role:r.role}));
+      return rows.map(r => ({id:r.user_id,name:r.display_name,role:r.role,active:r.active !== false}));
     },
-    async listDays(){
-      const rows = must(await sb.from("entries").select("entry_date").order("entry_date",{ascending:false}).limit(1000));
-      return rows.map(r => ({date:r.entry_date}));
+    /* dates on which this member wrote something (for the calendar dots) */
+    async listDays(owner){
+      const [ents, ans, its] = await Promise.all([
+        pageAll(() => sb.from("entries").select("id,entry_date").order("id")),
+        pageAll(() => sb.from("answers").select("entry_id").eq("user_id",owner).order("id")),
+        pageAll(() => sb.from("marketing_items").select("entry_id").eq("user_id",owner).order("id"))]);
+      const dm = new Map(ents.map(e => [e.id, e.entry_date])), set = new Set();
+      ans.concat(its).forEach(r => { const d = dm.get(r.entry_id); if (d) set.add(d); });
+      return [...set].sort().reverse().map(date => ({date}));
     },
-    async loadEntry(date){
+    async loadEntry(date, owner){
       const row = await entryRow(date,false);
       if (!row) return {exists:false,answers:[],comments:[],items:[],questions:null};
       const id = row.id;
       const [a,c] = await Promise.all([
-        sb.from("answers").select("question_no,user_id,body,updated_at").eq("entry_id",id),
-        sb.from("comments").select("id,question_no,user_id,body,created_at").eq("entry_id",id).order("created_at")
+        sb.from("answers").select("question_no,user_id,body,updated_at").eq("entry_id",id).eq("user_id",owner),
+        sb.from("comments").select("id,question_no,user_id,report_user,body,created_at").eq("entry_id",id).eq("report_user",owner).order("created_at")
       ]);
-      let it = await sb.from("marketing_items").select("id,user_id,kind,doctor_name,notes,created_at").eq("entry_id",id).order("created_at");
+      if (c.error) upd6(c.error);
+      let it = await sb.from("marketing_items").select("id,user_id,kind,doctor_name,notes,created_at").eq("entry_id",id).eq("user_id",owner).order("created_at");
       if (it.error && /kind/i.test(it.error.message || "")){          // database not updated yet: only the old list exists
-        it = await sb.from("marketing_items").select("id,user_id,doctor_name,notes,created_at").eq("entry_id",id).order("created_at");
+        it = await sb.from("marketing_items").select("id,user_id,doctor_name,notes,created_at").eq("entry_id",id).eq("user_id",owner).order("created_at");
       }
       needsUpdate = Boolean(it.error) || (it.data || []).some(r => r.kind === undefined);
       const items = it.error ? [] : it.data.map(r => ({id:r.id,date,kind:r.kind || "marketing",user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at}));
       return {
         exists:true, items,
         answers: must(a).map(r => ({date,q:r.question_no,user_id:r.user_id,body:r.body,updated_at:r.updated_at})),
-        comments: must(c).map(r => ({id:r.id,date,q:r.question_no,user_id:r.user_id,body:r.body,created_at:r.created_at})),
+        comments: c.data.map(r => ({id:r.id,date,q:r.question_no,user_id:r.user_id,report_user:r.report_user,body:r.body,created_at:r.created_at})),
         questions: normQs(row.questions)
       };
     },
@@ -639,13 +764,18 @@ async function createLiveApi(){
         {team_id:teamId,entry_id:id,question_no:q,user_id:uid,body},
         {onConflict:"entry_id,question_no,user_id"}));
     },
-    async addComment(date,q,body){
+    async deleteAnswerOf(date,q,owner){          // admin removes a colleague's written answer
+      const row = await entryRow(date, false); if (!row) return;
+      must(await sb.from("answers").delete().eq("entry_id",row.id).eq("question_no",q).eq("user_id",owner));
+    },
+    async addComment(date,q,body,reportUser){
       const row = await entryRow(date, false);
       if (!row) throw new Error("no entry");
-      const r = must(await sb.from("comments").insert({team_id:teamId,entry_id:row.id,question_no:q,user_id:uid,body})
+      const r = must(await sb.from("comments").insert({team_id:teamId,entry_id:row.id,question_no:q,user_id:uid,report_user:reportUser,body})
         .select("id,created_at").single());
-      return {id:r.id,date,q,user_id:uid,body,created_at:r.created_at};
+      return {id:r.id,date,q,user_id:uid,report_user:reportUser,body,created_at:r.created_at};
     },
+    async editComment(id,body){ must(await sb.from("comments").update({body}).eq("id",id).select("id").single()); },
     async deleteComment(id){ must(await sb.from("comments").delete().eq("id",id)); },
     async saveItem(date,{id,kind,name,notes}){
       if (needsUpdate) throw new Error("update needed");
@@ -660,7 +790,14 @@ async function createLiveApi(){
       }
       return {id:r.id,date,kind:r.kind,user_id:r.user_id,name:r.doctor_name,notes:r.notes,created_at:r.created_at};
     },
-    async deleteItem(id){ must(await sb.from("marketing_items").delete().eq("id",id)); }
+    async deleteItem(id){ must(await sb.from("marketing_items").delete().eq("id",id)); },
+    /* member management: only works for the admin (the database refuses everybody else) */
+    async listMembersAdmin(){ const { data, error } = await sb.rpc("admin_list_members"); if (error) throw error; return data || []; },
+    async addMember(email,name,role){ const { error } = await sb.rpc("admin_add_member", {p_email:email,p_name:name,p_role:role}); if (error) throw error; },
+    async setRole(id,role){ const { error } = await sb.rpc("admin_set_role", {p_user:id,p_role:role}); if (error) throw error; },
+    async setActive(id,on){ const { error } = await sb.rpc("admin_set_active", {p_user:id,p_active:on}); if (error) throw error; },
+    async renameMember(id,name){ const { error } = await sb.rpc("admin_rename_member", {p_user:id,p_name:name}); if (error) throw error; },
+    async removeMember(id){ const { error } = await sb.rpc("admin_remove_member", {p_user:id}); if (error) throw error; }
   };
 }
 
@@ -668,7 +805,7 @@ async function createLiveApi(){
    APP
    ===================================================================== */
 let api;
-const state = {user:null,members:[],me:null,author:null,isAuthor:false,date:null,entry:null,qIds:[],dates:new Set(),all:null};
+const state = {user:null,members:[],me:null,view:null,isOwner:true,isAdmin:false,page:"day",allFor:null,date:null,entry:null,qIds:[],dates:new Set(),all:null,fb:[],openT:new Set(),focusT:null};
 let pollTimer = null, renderedToday = todayISO(), drafts = {}, seq = 0;
 const app = $("#app");
 const memberOf = id => state.members.find(m => m.id === id);
@@ -676,13 +813,37 @@ const colorOf = id => COLORS[Math.max(0,state.members.findIndex(m => m.id === id
 const TITLES = ["سید","دکتر","خانم","آقای","مهندس"];
 const initial = name => { const w = String(name || "").trim().split(/\s+/).find(x => !TITLES.includes(x)) || String(name || "").trim(); return [...w][0] || "؟"; };
 const avatar = (m,cls="") => `<span class="avatar ${cls}" style="--mc:${colorOf(m.id)}" aria-hidden="true">${esc(initial(m.name))}</span>`;
-const answerOf = q => ((state.entry && state.entry.answers) || []).find(a => a.q===q && state.author && a.user_id===state.author.id && a.body.trim());
+const answerOf = q => ((state.entry && state.entry.answers) || []).find(a => a.q===q && state.view && a.user_id===state.view.id && a.body.trim());
 const itemsOf = kind => ((state.entry && state.entry.items) || []).filter(i => i.kind===kind);
 const cardEl = t => $(`.card[data-t="${t}"]`);
 const sectionOf = t => SECTIONS.find(s => s.thread === t);
 const hasContent = t => { const s = sectionOf(t); return s ? itemsOf(s.kind).length > 0 : !!answerOf(t); };
 const lsGet = k => { try { return localStorage.getItem(k); } catch { return null; } };
 const lsSet = (k,v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k,v); } catch {} };
+/* ---- theme: system / light / dark (dark = empty-space black) ---- */
+const THEME_KEY = "tj-theme";
+function applyTheme(m){
+  const r = document.documentElement;
+  if (m === "light" || m === "dark") r.dataset.theme = m; else delete r.dataset.theme;
+  document.querySelectorAll('meta[name="theme-color"]').forEach(x => x.remove());
+  const add = (c, media) => { const x = document.createElement("meta"); x.name = "theme-color"; x.content = c; if (media) x.media = media; document.head.append(x); };
+  if (m === "dark") add("#000000"); else if (m === "light") add("#f5f5f7");
+  else { add("#f5f5f7","(prefers-color-scheme: light)"); add("#000000","(prefers-color-scheme: dark)"); }
+}
+applyTheme(lsGet(THEME_KEY) || "system");
+
+/* ---- feedback bell: number of NEW feedback from others; opening it resets the number, the list stays ---- */
+const seenKey = () => `tj-seen:${state.me.id}`;
+function seenAt(){ let v = Number(lsGet(seenKey())); if (!v){ v = Date.now(); lsSet(seenKey(), String(v)); } return v; }
+const othersFb = () => state.fb.filter(c => c.report_user === state.me.id && c.user_id !== state.me.id);   // feedback others wrote on MY reports
+function updateBadge(){
+  const b = $("#bdg"); if (!b || !state.me) return;
+  const s = seenAt(), n = othersFb().filter(c => Date.parse(c.created_at) > s).length;
+  b.hidden = !n; b.textContent = n > 99 ? "۹۹+" : fa(n);
+}
+async function refreshFeedback(){ try { state.fb = await api.listFeedback(); updateBadge(); } catch {} }
+const threadTitle = t => { const sc = sectionOf(t); return sc ? sc.title : ((QUESTIONS.find(x => x.id === t) || {}).title || LEGACY_TITLES[t] || "سؤال"); };
+
 const loadingHTML = () => `<div class="loading"><div class="dots"><span></span><span></span><span></span></div></div>`;
 
 /* ---- session: only while this tab is open, and only while it is used ---- */
@@ -734,7 +895,7 @@ function loginView(){
 }
 function noAccessView(){
   app.innerHTML = `<div class="center"><div class="card login reveal">
-    <h1>دسترسی ندارید</h1><p>این حساب عضو تیم نیست. اگر فکر می‌کنید اشتباه است، از مدیر تیم بخواهید شما را اضافه کند.</p>
+    <h1>دسترسی ندارید</h1><p>این حساب عضو فعال تیم نیست (یا دسترسی‌اش قطع شده). از مدیر تیم بخواه بررسی کند.</p>
     <button class="btn block ghost" id="so">خروج</button></div></div>`;
   $("#so").onclick = signOut;
 }
@@ -744,12 +905,12 @@ async function enter(user){
   state.user = user;
   state.members = await api.members();
   state.me = memberOf(user.id);
-  if (!state.me) return noAccessView();
-  state.author = state.members.find(m => m.role === "author") || null;
-  state.isAuthor = state.me.role === "author";
+  if (!state.me || !state.me.active) return noAccessView();
+  state.isAdmin = state.me.role === "admin";
+  state.view = state.me; state.isOwner = true;
   renderShell();
-  refreshDates();
-  showDay(parseRoute());
+  refreshFeedback();
+  showRoute();
 }
 
 function renderShell(){
@@ -757,18 +918,25 @@ function renderShell(){
     ? `<div class="banner">نسخه‌ی نمایشی — داده‌ها نمونه‌اند و فقط روی همین دستگاه می‌مانند. هنوز به Supabase وصل نیست.</div>` : "";
   app.innerHTML = `
     <header class="topbar"><h1>ژورنال تیم</h1>
-      <div class="tb"><button class="iconbtn sm" id="srch" aria-label="جستجو">${svgSearch}</button>
+      <div class="tb"><button class="iconbtn sm bell" id="bell" aria-label="فیدبک‌ها">${svgBell}<b class="badge" id="bdg" hidden></b></button>
+      <button class="iconbtn sm" id="srch" aria-label="جستجو">${svgSearch}</button>
       <button class="avatar-btn" id="menu" aria-label="تنظیمات">${avatar(state.me)}</button></div></header>
-    ${demoBar}<div id="notice"></div><main id="view"></main>`;
+    ${demoBar}<div id="notice"></div><main id="view"></main>
+    <nav class="tabbar" aria-label="بخش‌ها"><div class="in">
+      <a class="tab on" data-p="home" href="#/">${svgHome}<span>صفحه اصلی</span></a>
+      <a class="tab" data-p="col" href="#/c">${svgPeople}<span>گزارش همکاران</span></a></div></nav>`;
   $("#menu").onclick = openSheet;
   $("#srch").onclick = openSearch;
+  $("#bell").onclick = openFeedback;
+  updateBadge();
 }
 async function refreshDates(){
-  try { state.dates = new Set((await api.listDays()).map(d => d.date)); renderNotice(); } catch {}
+  const v = state.view; if (!v) return;
+  try { const ds = new Set((await api.listDays(v.id)).map(d => d.date)); if (state.view === v){ state.dates = ds; renderNotice(); } } catch {}
 }
 const BK_DAYS = 30;
 function backupDue(){
-  if (api.mode !== "live" || !state.isAuthor || !state.dates.size) return false;
+  if (api.mode !== "live" || !state.isAdmin || !state.isOwner || !state.dates.size) return false;
   let base = Number(lsGet("tj-backup-last")) || Number(lsGet("tj-backup-base")) || 0;
   if (!base){ base = Date.now(); lsSet("tj-backup-base", String(base)); }
   return Date.now() - base > BK_DAYS * 864e5;
@@ -782,23 +950,60 @@ function renderNotice(){
   const b = $("#nBk"); if (b) b.onclick = () => doBackup("json");
 }
 
-/* ---- routing: one date per page, e.g. …/#/d/2026-10-12 ---- */
+/* ---- routing:  #/  (my today)   #/d/DATE (my day)   #/c (colleagues)   #/c/ID[/DATE] (a colleague's day) ---- */
+function hashFor(uid, date){
+  const today = date === todayISO();
+  return uid === state.me.id ? (today ? "#/" : "#/d/" + date) : "#/c/" + encodeURIComponent(uid) + (today ? "" : "/" + date);
+}
 function parseRoute(){
-  const m = location.hash.match(/^#\/d\/(\d{4}-\d{2}-\d{2})$/), today = todayISO();
-  let d = m && validISO(m[1]) ? m[1] : today;
-  if (d > today) d = today;
-  return d;
+  const h = location.hash, today = todayISO();
+  const clampd = d => (d && validISO(d) && d <= today) ? d : today;
+  let m = h.match(/^#\/c\/([^/]+)(?:\/(\d{4}-\d{2}-\d{2}))?$/);
+  if (m) return {page:"colleague", uid:decodeURIComponent(m[1]), date:clampd(m[2])};
+  if (/^#\/c\/?$/.test(h)) return {page:"colleagues"};
+  m = h.match(/^#\/d\/(\d{4}-\d{2}-\d{2})$/);
+  return {page:"home", uid:state.me.id, date:clampd(m && m[1])};
 }
-function go(date){
-  const h = date === todayISO() ? "#/" : "#/d/" + date;
-  if (location.hash === h || (h === "#/" && !location.hash)) showDay(date); else location.hash = h;
+function goTo(uid, date){
+  const h = hashFor(uid, date);
+  if (location.hash === h || (h === "#/" && !location.hash)) showRoute(); else location.hash = h;
 }
-addEventListener("hashchange", () => { if (state.me) showDay(parseRoute()); });
+const go = date => goTo(state.view.id, date);
+const setTab = p => document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.dataset.p === p));
+function showRoute(){
+  if (!state.me) return;
+  const r = parseRoute();
+  clearInterval(pollTimer);
+  if (r.page === "colleagues"){ setTab("col"); return showColleagues(); }
+  const v = r.page === "home" ? state.me : memberOf(r.uid);
+  if (!v || !v.active){ location.hash = "#/c"; return; }
+  if (r.page === "colleague" && v.id === state.me.id){ location.hash = "#/"; return; }
+  state.view = v; state.isOwner = v.id === state.me.id;
+  setTab(state.isOwner ? "home" : "col");
+  showDay(r.date);
+}
+addEventListener("hashchange", showRoute);
+
+/* ---- colleagues: everybody except me; tap a name to read that person's reports ---- */
+async function showColleagues(){
+  state.page = "colleagues";
+  const view = $("#view"); if (!view) return;
+  view.innerHTML = loadingHTML();
+  const others = state.members.filter(m => m.id !== state.me.id && m.active), last = {};
+  await Promise.all(others.map(async m => { try { const d = await api.listDays(m.id); last[m.id] = {n:d.length, date:d[0] && d[0].date}; } catch {} }));
+  if (state.page !== "colleagues") return;
+  view.innerHTML = `<div class="pagehead reveal"><h2>گزارش همکاران</h2><div class="sub2">گزارش روزانه‌ی همکارانت را بخوان و زیرش فیدبک کوتاه بنویس.</div></div>` +
+    (others.map((m,i) => { const l = last[m.id];
+      return `<a class="colleague card reveal" style="--i:${i+1}" href="#/c/${encodeURIComponent(m.id)}">${avatar(m)}
+        <div class="cn"><b>${esc(m.name)}</b><small>${l && l.date ? `آخرین گزارش: ${esc(dayMonth(l.date))} · ${fa(l.n)} روز` : "هنوز گزارشی ننوشته"}</small></div>
+        <span class="go">${svgNext}</span></a>`; }).join("") || `<div class="card"><div class="sec-empty">هنوز همکاری در تیم نیست.</div></div>`);
+  window.scrollTo(0,0);
+}
 
 /* ---- which questions to show for this day ---- */
 function visibleQuestions(){
   const e = state.entry, base = e.questions || QUESTIONS, cur = new Set(QUESTIONS.map(q => q.id));
-  const answered = new Set((e.answers || []).filter(a => state.author && a.user_id === state.author.id && a.body.trim()).map(a => a.q));
+  const answered = new Set((e.answers || []).filter(a => state.view && a.user_id === state.view.id && a.body.trim()).map(a => a.q));
   const title = id => (base.find(q => q.id === id) || QUESTIONS.find(q => q.id === id) || {}).title || LEGACY_TITLES[id] || "سؤال قبلی";
   const ids = new Set();
   base.forEach(q => { if (cur.has(q.id) || answered.has(q.id)) ids.add(q.id); });
@@ -810,19 +1015,22 @@ function visibleQuestions(){
 async function showDay(date){
   clearInterval(pollTimer);
   const view = $("#view"); if (!view) return;
-  state.date = date; drafts = {};
+  state.date = date; state.page = "day"; drafts = {}; state.openT = new Set();
+  const owner = state.view;
   view.innerHTML = loadingHTML();
+  refreshDates();
   let entry;
-  try { entry = await api.loadEntry(date); }
+  try { entry = await api.loadEntry(date, owner.id); }
   catch (e) {
     console.error(e);
     if (state.date === date){
-      view.innerHTML = `<div class="card"><p style="margin:0 0 14px">اطلاعات بارگذاری نشد. اتصال اینترنت را بررسی کن.</p><button class="btn block" id="retry">تلاش دوباره</button></div>`;
+      const old = e && /update 6/.test(e.message || "");
+      view.innerHTML = `<div class="card"><p style="margin:0 0 14px">${old ? "دیتابیس هنوز به‌روز نشده است. فایل supabase-update-6.sql را در Supabase اجرا کن." : "اطلاعات بارگذاری نشد. اتصال اینترنت را بررسی کن."}</p><button class="btn block" id="retry">تلاش دوباره</button></div>`;
       $("#retry").onclick = () => showDay(date);
     }
     return;
   }
-  if (state.date !== date) return;
+  if (state.date !== date || state.view !== owner) return;
   state.entry = entry;
   renderNotice();
   const qs = visibleQuestions();
@@ -833,18 +1041,24 @@ async function showDay(date){
   $("#cal").onclick = openCalendar;
   const gt = $("#gotoToday"); if (gt) gt.onclick = () => go(todayISO());
   qs.forEach(q => {
-    if (state.isAuthor) bindAuthorCard(q.id, date); else renderAnswerView(q.id);
+    if (state.isOwner) bindAuthorCard(q.id, date); else renderAnswerView(q.id);
   });
   SECTIONS.forEach(sec => bindSection(sec, date));
   state.qIds.concat(SECTIONS.map(s => s.thread)).forEach(t => { renderComments(t); bindComments(t, date); });
   updateSummary();
   window.scrollTo(0,0);
+  if (state.focusT !== null){
+    const t = state.focusT; state.focusT = null;
+    if (cardEl(t)){ state.openT.add(t); renderComments(t); cardEl(t).scrollIntoView({block:"center"}); }
+  }
   pollTimer = setInterval(() => { if (!document.hidden) refreshCurrent(); }, 30000);
 }
 
 function dayHTML(date, qs){
   const d = parseISO(date), isToday = date === todayISO();
-  return `
+  const who = state.isOwner ? "" : `<div class="whobar reveal"><a class="iconbtn sm" href="#/c" aria-label="بازگشت به فهرست">${svgPrev}</a>${avatar(state.view)}
+      <div><b>${esc(state.view.name)}</b><small>گزارش همکار · فقط خواندنی، فیدبک بده</small></div></div>`;
+  return `${who}
     <div class="dayhead reveal">
       <div class="info"><div class="wk">${esc(F.weekday.format(d))}</div><div class="dt">${esc(dayMonth(date))}</div><div class="yr">${esc(F.year.format(d))}</div></div>
       <div class="tools">
@@ -860,14 +1074,17 @@ function dayHTML(date, qs){
 }
 
 const commentsBlock = () => `<div class="comments">
-      <h3 class="ch"></h3><div class="clist"></div>
-      <form class="cform" hidden><input class="field" maxlength="${MAX_COMMENT}" placeholder="فیدبک کوتاه بنویس…" enterkeyhint="send" autocomplete="off">
-      <button class="send" type="submit" aria-label="ارسال" disabled>${svgSend}</button></form>
-      <div class="ccount"></div>
+      <button class="ctoggle" type="button" aria-expanded="false">${svgChat}<span class="ch"></span><span class="cv">${svgChev}</span></button>
+      <div class="cbody" hidden>
+        <div class="clist"></div>
+        <form class="cform" hidden><input class="field" maxlength="${MAX_COMMENT}" placeholder="فیدبک کوتاه بنویس…" enterkeyhint="send" autocomplete="off">
+        <button class="send" type="submit" aria-label="ارسال" disabled>${svgSend}</button></form>
+        <div class="ccount"></div>
+      </div>
     </div>`;
 
 function questionCard(q,i){
-  const body = state.isAuthor
+  const body = state.isOwner
     ? `<label class="label" for="ta-${q.id}">پاسخ تو</label>
        <textarea id="ta-${q.id}" placeholder="اینجا بنویس…"></textarea>
        <div class="submit-row"><span class="save-state" data-s=""></span>
@@ -884,7 +1101,7 @@ function sectionCard(sec,i){
   return `<section class="card sec reveal" data-t="${sec.thread}" data-kind="${sec.kind}" style="--i:${i+3}">
     <div class="sec-head"><h2>${esc(sec.title)}</h2><span class="sec-count"></span></div>
     <div class="sec-list"></div>
-    ${state.isAuthor ? `<button class="add" type="button" aria-label="افزودن به ${esc(sec.title)}">${svgPlus}<span>افزودن</span></button>` : ""}
+    ${state.isOwner ? `<button class="add" type="button" aria-label="افزودن به ${esc(sec.title)}">${svgPlus}<span>افزودن</span></button>` : ""}
     ${commentsBlock()}
   </section>`;
 }
@@ -902,10 +1119,20 @@ function updateSummary(){
 
 /* ---- written answers ---- */
 function renderAnswerView(q){
-  const box = $(".aview", cardEl(q)), a = answerOf(q), au = state.author;
+  const box = $(".aview", cardEl(q)), a = answerOf(q), au = state.view;
   box.className = "aview" + (a ? "" : " empty");
   box.innerHTML = (a && au ? `<div class="who">${avatar(au,"sm")}<span>${esc(au.name)}</span></div>` : "") +
-    `<div class="body">${a ? esc(a.body) : "هنوز پاسخی ثبت نشده است."}</div>`;
+    `<div class="body">${a ? esc(a.body) : "هنوز پاسخی ثبت نشده است."}</div>` +
+    (a && state.isAdmin && !state.isOwner ? `<button class="linkdel ans-del" type="button">حذف این پاسخ (مدیر)</button>` : "");
+  const d = $(".ans-del", box);
+  if (d) d.onclick = async () => {
+    if (!confirm("این پاسخ حذف شود؟")) return;
+    try {
+      await api.deleteAnswerOf(state.date, q, state.view.id);
+      state.entry.answers = state.entry.answers.filter(x => !(x.q === q && x.user_id === state.view.id));
+      renderAnswerView(q); renderComments(q); updateSummary(); toast("حذف شد");
+    } catch { toast("حذف نشد."); }
+  };
 }
 
 function autoGrow(ta, min = 110){ ta.style.height = "auto"; ta.style.height = Math.max(min, ta.scrollHeight) + "px"; }
@@ -973,7 +1200,8 @@ function persistDrafts(sec){
 }
 const rowHTML = it => `<div class="row-item" data-id="${esc(it.id)}">
     <div class="main"><div class="nm">${esc(it.name)}</div>${it.notes ? `<div class="nt">${esc(it.notes)}</div>` : ""}</div>
-    ${state.isAuthor ? `<div class="acts"><button class="tinybtn r-edit" type="button" aria-label="ویرایش">${svgEdit}</button><button class="tinybtn danger r-del" type="button" aria-label="حذف">${svgTrash}</button></div>` : ""}
+    ${state.isOwner ? `<div class="acts"><button class="tinybtn r-edit" type="button" aria-label="ویرایش">${svgEdit}</button><button class="tinybtn danger r-del" type="button" aria-label="حذف">${svgTrash}</button></div>`
+      : state.isAdmin ? `<div class="acts"><button class="tinybtn danger r-del" type="button" aria-label="حذف (مدیر)">${svgTrash}</button></div>` : ""}
   </div>`;
 const formHTML = (sec,d) => `<div class="form" data-k="${d.k}">
     <input class="field f-name" maxlength="200" placeholder="${esc(sec.namePh)}" autocomplete="off" enterkeyhint="next">
@@ -983,11 +1211,11 @@ const formHTML = (sec,d) => `<div class="form" data-k="${d.k}">
 
 function renderSection(sec){
   const card = cardEl(sec.thread); if (!card) return;
-  const items = itemsOf(sec.kind), dl = state.isAuthor ? secDrafts(sec) : [];
+  const items = itemsOf(sec.kind), dl = state.isOwner ? secDrafts(sec) : [];
   let html = "";
   for (const it of items){ const ed = dl.find(x => x.editId === it.id); html += ed ? formHTML(sec,ed) : rowHTML(it); }
   html += dl.filter(x => x.editId === null).map(d => formHTML(sec,d)).join("");
-  $(".sec-list", card).innerHTML = html || `<div class="sec-empty">${state.isAuthor ? "هنوز موردی ثبت نشده. با + اضافه کن." : "هنوز موردی ثبت نشده است."}</div>`;
+  $(".sec-list", card).innerHTML = html || `<div class="sec-empty">${state.isOwner ? "هنوز موردی ثبت نشده. با «افزودن» شروع کن." : "هنوز موردی ثبت نشده است."}</div>`;
   dl.forEach(d => {
     const el = $(`.form[data-k="${d.k}"]`, card); if (!el) return;
     $(".f-name", el).value = d.name;
@@ -1021,7 +1249,7 @@ function bindSection(sec, date){
   });
   card.addEventListener("click", async e => {
     const b = e.target.closest("button"); if (!b) return;
-    const form = b.closest(".form"), row = b.closest(".row-item"), dl = state.isAuthor ? secDrafts(sec) : [];
+    const form = b.closest(".form"), row = b.closest(".row-item"), dl = state.isOwner ? secDrafts(sec) : [];
     if (b.classList.contains("f-cancel") && form){
       const i = dl.findIndex(x => String(x.k) === form.dataset.k);
       if (i >= 0) dl.splice(i,1);
@@ -1070,12 +1298,16 @@ function bindSection(sec, date){
 function renderComments(t){
   const card = cardEl(t); if (!card) return;
   const list = (state.entry.comments || []).filter(c => c.q === t);
-  $(".ch", card).textContent = list.length ? `فیدبک‌ها (${fa(list.length)})` : "فیدبک‌ها";
+  const block = $(".comments", card), open = state.openT.has(t);
+  block.hidden = !hasContent(t) && !list.length;
+  block.classList.toggle("open", open); $(".cbody", card).hidden = !open; $(".ctoggle", card).setAttribute("aria-expanded", String(open));
+  $(".ch", card).textContent = list.length ? `فیدبک (${fa(list.length)})` : "فیدبک";
+  if ($(".ed", card)) return;                       // somebody is editing a feedback: do not redraw under their fingers
   $(".clist", card).innerHTML = list.map(c => {
-    const m = memberOf(c.user_id) || {id:c.user_id,name:"؟"};
-    return `<div class="comment">${avatar(m,"sm")}<div class="bubble">
+    const m = memberOf(c.user_id) || {id:c.user_id,name:"؟"}, mine = c.user_id === state.me.id;
+    return `<div class="comment" data-id="${esc(c.id)}">${avatar(m,"sm")}<div class="bubble">
       <div class="meta"><b>${esc(m.name)}</b><span>${esc(F.time.format(new Date(c.created_at)))}</span>
-      ${c.user_id===state.me.id ? `<button class="del" data-id="${esc(c.id)}">حذف</button>` : ""}</div>
+      ${mine || state.isAdmin ? `<span class="cact">${mine ? `<button class="edit" type="button">ویرایش</button>` : ""}<button class="del" type="button" data-id="${esc(c.id)}">حذف</button></span>` : ""}</div>
       <div class="txt">${esc(c.body)}</div></div></div>`;
   }).join("");
   $(".cform", card).hidden = !hasContent(t);   // feedback only makes sense under existing content
@@ -1083,6 +1315,11 @@ function renderComments(t){
 
 function bindComments(t, date){
   const card = cardEl(t), form = $(".cform", card), input = $(".field", form), btn = $(".send", form), cc = $(".ccount", card);
+  $(".ctoggle", card).onclick = () => {
+    if (state.openT.has(t)) state.openT.delete(t); else state.openT.add(t);
+    renderComments(t);
+    if (state.openT.has(t) && !form.hidden) setTimeout(() => input.focus({preventScroll:true}), 50);
+  };
   input.addEventListener("input", () => {
     btn.disabled = !input.value.trim();
     cc.textContent = input.value.length ? `${fa(input.value.length)} / ${fa(MAX_COMMENT)}` : "";
@@ -1092,39 +1329,57 @@ function bindComments(t, date){
     const body = input.value.trim(); if (!body) return;
     btn.disabled = true;
     try {
-      const c = await api.addComment(date,t,body);
+      const c = await api.addComment(date,t,body,state.view.id);
       state.entry.comments.push(c); input.value = ""; cc.textContent = ""; renderComments(t);
     } catch { toast("ارسال نشد. دوباره تلاش کن."); btn.disabled = false; }
   };
   $(".clist", card).onclick = async e => {
-    const b = e.target.closest(".del"); if (!b) return;
-    try {
-      await api.deleteComment(b.dataset.id);
-      state.entry.comments = state.entry.comments.filter(c => String(c.id) !== b.dataset.id);
-      renderComments(t);
-    } catch { toast("حذف نشد."); }
+    const row = e.target.closest(".comment"); if (!row) return;
+    const id = row.dataset.id, c = state.entry.comments.find(x => String(x.id) === id);
+    if (e.target.closest(".del")){
+      if (!confirm("این فیدبک حذف شود؟")) return;
+      try {
+        await api.deleteComment(id);
+        state.entry.comments = state.entry.comments.filter(x => String(x.id) !== id);
+        renderComments(t);
+      } catch { toast("حذف نشد."); }
+      return;
+    }
+    if (e.target.closest(".edit") && c){
+      $(".txt", row).innerHTML = `<div class="edrow"><input class="field ed" maxlength="${MAX_COMMENT}"><button class="btn xs ed-ok" type="button">ثبت</button><button class="btn xs ghost ed-no" type="button">انصراف</button></div>`;
+      const inp = $(".ed", row); inp.value = c.body; inp.focus();
+      return;
+    }
+    if (e.target.closest(".ed-no")){ renderCommentsForce(t); return; }
+    if (e.target.closest(".ed-ok") && c){
+      const v = $(".ed", row).value.trim(); if (!v) return;
+      try { await api.editComment(id, v); c.body = v; renderCommentsForce(t); toast("ویرایش شد"); }
+      catch { toast("ویرایش نشد."); }
+    }
   };
 }
+function renderCommentsForce(t){ const card = cardEl(t); if (!card) return; const ed = $(".ed", card); if (ed) ed.classList.remove("ed"); renderComments(t); }
 
-/* refresh feedback (and, for reviewers, the author's content) of the day being viewed */
+/* refresh feedback (and, on a colleague's page, their content) of the day being viewed */
 async function refreshCurrent(){
-  if (!state.me || !state.entry) return;
+  if (!state.me || !state.entry || state.page !== "day") return;
   const date = state.date;
   try {
-    const fresh = await api.loadEntry(date);
-    if (state.date !== date) return;
+    const fresh = await api.loadEntry(date, state.view.id);
+    if (state.date !== date || state.page !== "day") return;
     const cur = state.entry;
     cur.comments = fresh.comments;
-    if (!state.isAuthor){ cur.answers = fresh.answers; cur.items = fresh.items; }
-    state.qIds.forEach(id => { if (!state.isAuthor) renderAnswerView(id); renderComments(id); });
-    SECTIONS.forEach(sec => { if (!state.isAuthor) renderSection(sec); renderComments(sec.thread); });
+    if (!state.isOwner){ cur.answers = fresh.answers; cur.items = fresh.items; }
+    state.qIds.forEach(id => { if (!state.isOwner) renderAnswerView(id); renderComments(id); });
+    SECTIONS.forEach(sec => { if (!state.isOwner) renderSection(sec); renderComments(sec.thread); });
     updateSummary();
   } catch {}
+  refreshFeedback();
 }
 document.addEventListener("visibilitychange", () => {
   if (document.hidden || !state.me) return;
   if (LIVE && idleExpired()){ signOut(); return; }
-  if (todayISO() !== renderedToday){ renderedToday = todayISO(); showDay(parseRoute()); } else refreshCurrent();
+  if (todayISO() !== renderedToday){ renderedToday = todayISO(); showRoute(); } else refreshCurrent();
 });
 
 /* ---- calendar (Persian), opened from the date at the top ---- */
@@ -1179,6 +1434,32 @@ function makeSheet(cls=""){
   return {sh, close};
 }
 
+/* ---- feedback list (bell) ---- */
+async function openFeedback(){
+  const {sh, close} = makeSheet("tall");
+  const seen0 = seenAt();
+  sh.innerHTML = `<div class="grab"></div><h3>فیدبک‌ها</h3><div class="sub" id="fs"></div><div id="fl"></div>`;
+  const curY = F.year.format(new Date());
+  function draw(){
+    const list = othersFb().slice().sort((a,b) => String(b.created_at).localeCompare(String(a.created_at))).slice(0,150);
+    const n = list.filter(c => Date.parse(c.created_at) > seen0).length;
+    $("#fs", sh).textContent = !list.length ? "" : n ? `${fa(n)} فیدبک جدید` : "همه خوانده شده‌اند";
+    $("#fl", sh).innerHTML = list.map(c => {
+      const m = memberOf(c.user_id) || {id:c.user_id,name:"؟"}, isNew = Date.parse(c.created_at) > seen0, d = new Date(c.created_at);
+      const dl = dayMonth(c.date) + (F.year.format(parseISO(c.date)) !== curY ? " " + F.year.format(parseISO(c.date)) : "");
+      return `<button class="nf" type="button" data-d="${c.date}" data-t="${c.q}">
+        <div class="top"><i class="nd ${isNew ? "" : "off"}"></i>${avatar(m,"sm")}<span>${esc(m.name)}</span><small>${esc(dayMonth(iso(d)))} ${esc(F.time.format(d))}</small></div>
+        <div class="wh">${esc(dl)} · ${esc(threadTitle(c.q))}</div>
+        <div class="tx">${esc(c.body)}</div></button>`;
+    }).join("") || `<div class="sub" style="padding:24px 4px">هنوز فیدبکی نیامده است.</div>`;
+    const newest = list.reduce((mx,c) => Math.max(mx, Date.parse(c.created_at) || 0), 0);
+    lsSet(seenKey(), String(Math.max(Date.now(), newest))); updateBadge();
+  }
+  draw();
+  refreshFeedback().then(() => { if (sh.isConnected) draw(); });
+  $("#fl", sh).onclick = e => { const b = e.target.closest(".nf"); if (!b) return; state.focusT = Number(b.dataset.t); close(); goTo(state.me.id, b.dataset.d); };
+}
+
 /* ---- search: names only (not the notes), every day, duplicates included ---- */
 const DIG = {"۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9","٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9"};
 const normKey = t => String(t || "").toLowerCase()
@@ -1187,11 +1468,12 @@ const normKey = t => String(t || "").toLowerCase()
 async function openSearch(){
   const {sh, close} = makeSheet("tall");
   sh.innerHTML = `<div class="grab"></div>
-    <input class="field" id="sq" type="search" placeholder="جستجوی نام پزشک یا کاربر…" autocomplete="off" enterkeyhint="search">
+    <input class="field" id="sq" type="search" placeholder="${state.isOwner ? "جستجوی نام پزشک یا کاربر…" : "جستجو در گزارش‌های " + esc(state.view.name) + "…"}" autocomplete="off" enterkeyhint="search">
     <div class="chips"><button class="chip on" data-k="" type="button">همه</button>${SECTIONS.map(x => `<button class="chip" data-k="${x.kind}" type="button">${esc(x.title)}</button>`).join("")}</div>
     <div class="s-info" id="si"></div><div id="sres"></div>`;
   const q = $("#sq", sh), info = $("#si", sh), res = $("#sres", sh);
-  let kind = "", all = state.all;
+  const owner = state.view;
+  let kind = "", all = state.allFor === owner.id ? state.all : null;
   const curY = F.year.format(new Date());
   const dlabel = d => `${dayMonth(d)}${F.year.format(parseISO(d)) !== curY ? " " + F.year.format(parseISO(d)) : ""}`;
   function draw(){
@@ -1211,13 +1493,13 @@ async function openSearch(){
   }
   q.addEventListener("input", draw);
   sh.querySelectorAll(".chip").forEach(c => c.onclick = () => { kind = c.dataset.k; sh.querySelectorAll(".chip").forEach(x => x.classList.toggle("on", x === c)); draw(); });
-  res.onclick = e => { const b = e.target.closest(".sr"); if (!b) return; close(); go(b.dataset.d); };
+  res.onclick = e => { const b = e.target.closest(".sr"); if (!b) return; close(); goTo(owner.id, b.dataset.d); };
   draw();
   setTimeout(() => q.focus(), 350);
   try {
-    const items = await api.searchItems();
+    const items = await api.searchItems(owner.id);
     items.forEach(i => { i._k = normKey(i.name); });
-    state.all = all = items; draw();
+    state.all = all = items; state.allFor = owner.id; draw();
   } catch (e) { console.error(e); if (!all) info.textContent = "خواندن اطلاعات ممکن نشد. اتصال را بررسی کن."; }
 }
 
@@ -1245,6 +1527,86 @@ async function doBackup(fmt){
   } catch (e) { console.error(e); toast("پشتیبان‌گیری نشد. اتصال را بررسی کن."); }
 }
 
+/* ---- member management (admin) ---- */
+const memberErr = e => {
+  const m = (e && e.message) || "";
+  return /at least one active admin/i.test(m) ? "باید حداقل یک مدیر فعال بماند."
+    : /no account/i.test(m) ? "حسابی با این ایمیل پیدا نشد. اول در Supabase بسازش."
+    : /already a member/i.test(m) ? "این ایمیل از قبل عضو است."
+    : /at most 10/i.test(m) ? "حداکثر ۱۰ عضو می‌شود."
+    : /yourself/i.test(m) ? "این کار روی خودت ممکن نیست."
+    : /admin only/i.test(m) ? "فقط مدیر می‌تواند." : "انجام نشد.";
+};
+async function openMembers(){
+  const {sh, close} = makeSheet("tall");
+  sh.innerHTML = `<div class="grab"></div><h3>مدیریت اعضا</h3>
+    <div class="sub">فقط تو (مدیر) این بخش را می‌بینی. حساب جدید را اول در Supabase بساز، بعد اینجا اضافه‌اش کن.</div>
+    <div id="ml">${loadingHTML()}</div>
+    <div class="dvh">افزودن عضو</div>
+    <div class="form">
+      <input class="field ltr" id="ae" type="email" inputmode="email" placeholder="ایمیل حساب (ساخته‌شده در Supabase)" autocapitalize="off" autocorrect="off" spellcheck="false">
+      <input class="field" id="an" maxlength="40" placeholder="نام نمایشی">
+      <div class="seg" id="ar" role="group" aria-label="نقش"><button type="button" data-r="member" class="on">عضو</button><button type="button" data-r="admin">مدیر</button></div>
+      <div class="bar"><button class="btn xs" id="aadd" type="button">افزودن</button></div>
+    </div>
+    <details class="help"><summary>چطور حساب جدید بسازم؟</summary>
+      <ol><li>در Supabase: Authentication ← Users ← Add user ← Create new user.</li>
+      <li>ایمیل و رمز را بنویس و «Auto Confirm User» را روشن کن.</li>
+      <li>همان ایمیل را همین‌جا بنویس و «افزودن» را بزن.</li></ol>
+      <div>«قطع دسترسی» موقت است و گزارش‌ها می‌مانند. «حذف» عضو را از تیم بیرون می‌برد.</div></details>
+    <div class="row"><button class="btn block ghost" id="mc" type="button">بستن</button></div>`;
+  $("#mc", sh).onclick = close;
+  let role = "member";
+  sh.querySelectorAll("#ar button").forEach(b => b.onclick = () => { role = b.dataset.r; sh.querySelectorAll("#ar button").forEach(x => x.classList.toggle("on", x === b)); });
+  const box = $("#ml", sh);
+  async function reload(){
+    state.members = await api.members(); state.me = memberOf(state.user.id) || state.me;
+    state.isAdmin = state.me.role === "admin";
+  }
+  async function draw(){
+    let list;
+    try { list = await api.listMembersAdmin(); }
+    catch (e) { box.innerHTML = `<div class="sub">${/update 6|admin_list/i.test((e && e.message) || "") ? "دیتابیس هنوز به‌روز نشده (supabase-update-6.sql)." : "خواندن فهرست ممکن نشد."}</div>`; return; }
+    box.innerHTML = list.map(m => {
+      const me = m.user_id === state.user.id, mem = memberOf(m.user_id) || {id:m.user_id,name:m.display_name};
+      return `<div class="dv" data-id="${esc(m.user_id)}"><div class="t">${avatar(mem,"sm")}<span>${esc(m.display_name)}</span>
+        <span class="st ${m.role === "admin" ? "ok" : ""}">${esc(ROLE_FA[m.role] || m.role)}</span>
+        ${m.active ? "" : `<span class="st wait">غیرفعال</span>`}${me ? `<span class="st">تو</span>` : ""}</div>
+        <div class="m"><bdi dir="ltr">${esc(m.email || "")}</bdi></div>
+        <div class="bar">
+          <button class="btn xs ghost" data-a="rename" type="button">نام</button>
+          <button class="btn xs ghost" data-a="role" data-r="${m.role === "admin" ? "member" : "admin"}" type="button">${m.role === "admin" ? "عضو کن" : "مدیر کن"}</button>
+          ${me ? "" : `<button class="btn xs ghost" data-a="active" data-on="${m.active ? "0" : "1"}" type="button">${m.active ? "قطع دسترسی" : "وصل کن"}</button>
+          <button class="btn xs danger" data-a="remove" type="button">حذف</button>`}
+        </div></div>`;
+    }).join("");
+  }
+  box.onclick = async e => {
+    const b = e.target.closest("button[data-a]"), row = e.target.closest(".dv"); if (!b || !row) return;
+    const id = row.dataset.id, a = b.dataset.a;
+    try {
+      if (a === "rename"){
+        const cur = (memberOf(id) || {}).name || "", n = prompt("نام نمایشی:", cur);
+        if (n === null || !n.trim()) return;
+        await api.renameMember(id, n.trim());
+      } else if (a === "role") await api.setRole(id, b.dataset.r);
+      else if (a === "active") await api.setActive(id, b.dataset.on === "1");
+      else if (a === "remove"){ if (!confirm("این عضو از تیم حذف شود؟ (گزارش‌هایش می‌ماند)")) return; await api.removeMember(id); }
+      await reload(); await draw(); renderShell(); refreshFeedback(); showRoute(); toast("انجام شد");
+    } catch (err) { toast(memberErr(err)); }
+  };
+  $("#aadd", sh).onclick = async () => {
+    const em = $("#ae", sh).value.trim(), nm = $("#an", sh).value.trim();
+    if (!em || !nm) return toast("ایمیل و نام را بنویس.");
+    try {
+      await api.addMember(em, nm, role);
+      $("#ae", sh).value = ""; $("#an", sh).value = "";
+      await reload(); await draw(); toast("اضافه شد");
+    } catch (err) { toast(memberErr(err)); }
+  };
+  draw();
+}
+
 /* ---- settings sheet ---- */
 function openSheet(){
   const ov = document.createElement("div"); ov.className = "overlay";
@@ -1253,7 +1615,9 @@ function openSheet(){
   sh.innerHTML = `<div class="grab"></div>
     <h3>${esc(state.me.name)}</h3>
     <div class="sub">${esc(ROLE_FA[state.me.role] || "")}${live && state.user.email ? " · " + esc(state.user.email) : ""}</div>
-    ${live && state.isAuthor ? `
+    <div class="seg" id="thm" role="group" aria-label="ظاهر">${[["system","سیستم"],["light","روشن"],["dark","تیره"]].map(([m,l]) => `<button type="button" data-m="${m}" class="${(lsGet(THEME_KEY) || "system") === m ? "on" : ""}">${l}</button>`).join("")}</div>
+    ${state.isAdmin ? `<div class="row"><button class="btn block ghost" id="mm">مدیریت اعضا</button></div>` : ""}
+    ${live && state.isAdmin ? `
       <div class="row"><button class="btn block ghost" id="bkj">دانلود پشتیبان کامل</button></div>
       <div class="row"><button class="btn block ghost" id="bkc">دانلود لیست‌ها برای اکسل</button></div>
       <div class="sub" id="bkl">${lsGet("tj-backup-last") ? "آخرین پشتیبان: " + esc(dayMonth(iso(new Date(Number(lsGet("tj-backup-last")))))) : "هنوز پشتیبان نگرفته‌ای."}</div>` : ""}
@@ -1268,8 +1632,13 @@ function openSheet(){
   requestAnimationFrame(() => { ov.classList.add("open"); sh.classList.add("open"); });
   const close = () => { ov.classList.remove("open"); sh.classList.remove("open"); setTimeout(() => { ov.remove(); sh.remove(); }, 400); };
   ov.onclick = close; $("#cl", sh).onclick = close;
+  sh.querySelectorAll("#thm button").forEach(b => b.onclick = () => {
+    lsSet(THEME_KEY, b.dataset.m); applyTheme(b.dataset.m);
+    sh.querySelectorAll("#thm button").forEach(x => x.classList.toggle("on", x === b));
+  });
+  const mm = $("#mm", sh); if (mm) mm.onclick = () => { close(); setTimeout(openMembers, 250); };
   if (live){
-    if (state.isAuthor){
+    if (state.isAdmin){
       $("#bkj", sh).onclick = () => doBackup("json");
       $("#bkc", sh).onclick = () => doBackup("csv");
     }
@@ -1284,7 +1653,9 @@ function openSheet(){
       api.switchUser(b.dataset.u); close();
       setTimeout(() => {
         state.me = memberOf(b.dataset.u); state.user = {id:b.dataset.u};
-        state.isAuthor = state.me.role === "author"; renderShell(); showDay(state.date);
+        state.isAdmin = state.me.role === "admin"; state.view = state.me; state.isOwner = true; state.fb = []; state.all = null;
+        renderShell(); refreshFeedback();
+        if (location.hash && location.hash !== "#/") location.hash = "#/"; else showRoute();
       }, 250);
     });
   }
